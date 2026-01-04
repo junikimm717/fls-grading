@@ -23,6 +23,9 @@ LOGIN_RE = re.compile(r"login:")
 
 PID_RE = re.compile(r"^\d+$")
 
+NET_PORT = secrets.randbelow(10000) + 30000  # 30000–39999
+NET_TOKEN = secrets.token_hex(16)
+
 
 # -------------------------
 # QEMU command
@@ -99,7 +102,7 @@ class NetworkTestHandler(http.server.BaseHTTPRequestHandler):
             self.end_headers()
             return
 
-        body = b"network-ok\n"
+        body = (NET_TOKEN + "\n").encode()
 
         self.send_response(200)
         self.send_header("Content-Type", "text/plain")
@@ -113,7 +116,7 @@ class NetworkTestHandler(http.server.BaseHTTPRequestHandler):
 
 
 def start_http_server(
-    port: int = 8080,
+    port: int,
 ) -> tuple[threading.Thread, socketserver.TCPServer]:
     httpd = socketserver.TCPServer(("0.0.0.0", port), NetworkTestHandler)
     thread = threading.Thread(target=httpd.serve_forever, daemon=True)
@@ -285,7 +288,7 @@ def wait_for_default_route(vm: VM, timeout: int = 20) -> None:
 
 
 def test_http_fetch(out: list[str]) -> None:
-    if out != ["network-ok"]:
+    if out != [NET_TOKEN]:
         fail("failed to fetch network test payload")
 
 
@@ -316,7 +319,7 @@ test1 = [
     CommandTest("pgrep chronyd || pgrep chrony", lambda o: require_pids(o, "chrony")),
     SyncPoint(wait_for_default_route),
     CommandTest(
-        "wget -qO- http://10.0.2.2:8080/net-test",
+        f"wget -qO- http://10.0.2.2:{NET_PORT}/net-test",
         test_http_fetch,
     ),
     CommandTest("date +%Y", test_time),
@@ -339,7 +342,7 @@ def run_suite(tests: Sequence[Test]) -> None:
 
 
 if __name__ == "__main__":
-    thread, httpd = start_http_server(8080)
+    thread, httpd = start_http_server(NET_PORT)
     try:
         run_suite(test1)
         run_suite(test2)
