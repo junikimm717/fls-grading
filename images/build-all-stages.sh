@@ -6,7 +6,7 @@ export DIST
 export SRC
 
 cd /workspace
-ROOTFS="/dist/busybox" ./busybox/build.sh
-ROOTFS="/dist/kernel" ./kernel/build.sh
-ROOTFS="/dist/user" ./user/build.sh
-ROOTFS="/dist/image" ./image/build.sh
+ROOTFS="$DIST/busybox" ./busybox/build.sh
+ROOTFS="$DIST/kernel" ./kernel/build.sh
+ROOTFS="$DIST/user" ./user/build.sh
+ROOTFS="$DIST/image" ./image/build.sh
