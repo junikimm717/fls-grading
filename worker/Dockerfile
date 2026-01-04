@@ -17,14 +17,11 @@ RUN pip install --no-cache-dir uv
 # Set workdir
 WORKDIR /app
 
-# Copy dependency metadata first (better layer caching)
-COPY pyproject.toml uv.lock* ./
+# Copy the rest of the project
+COPY . .
 
 # Install dependencies
 RUN uv sync --frozen --no-dev
-
-# Copy the rest of the project
-COPY . .
 
 # Install the project itself (so fls-worker is on PATH)
 RUN uv pip install . --system
