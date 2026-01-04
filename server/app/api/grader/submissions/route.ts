@@ -1,9 +1,15 @@
 import { db } from "@/app/db";
 import { submissionTable } from "@/app/db/schema";
 import { SubmissionStatus } from "@/app/db/types";
+import { requireAdmin } from "@/app/lib/apikey";
 import { eq, and } from "drizzle-orm";
 
 export async function GET(req: Request) {
+  const auth = await requireAdmin(req);
+  if (!auth.ok) {
+    return new Response("Unauthorized", { status: auth.status });
+  }
+
   const arch = new URL(req.url).searchParams.get("arch");
   if (!arch) {
     return new Response("arch required", { status: 400 });
@@ -21,8 +27,8 @@ export async function GET(req: Request) {
     .where(
       and(
         eq(submissionTable.pending, SubmissionStatus.WAITING),
-        eq(submissionTable.arch, arch)
-      )
+        eq(submissionTable.arch, arch),
+      ),
     )
     .limit(10);
 

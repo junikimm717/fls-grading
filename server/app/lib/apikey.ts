@@ -96,3 +96,17 @@ export async function verifyApiKey(rawKey: string) {
 
   return key;
 }
+
+export async function requireAdmin(req: Request) {
+  const header = req.headers.get("authorization");
+  if (!header?.startsWith("Bearer ")) {
+    return { ok: false, status: 401 };
+  }
+
+  const key = header.slice("Bearer ".length);
+  const result = await verifyApiKey(key);
+  if (!result) return { ok: false, status: 401 };
+  if (!result.isAdmin) return { ok: false, status: 403 };
+
+  return { ok: true, admin: result };
+}

@@ -4,11 +4,17 @@ import { eq } from "drizzle-orm";
 import { FILESDIR } from "@/app/lib/env";
 import fs from "fs/promises";
 import path from "path";
+import { requireAdmin } from "@/app/lib/apikey";
 
 export async function GET(
-  _: Request,
+  req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const auth = await requireAdmin(req);
+  if (!auth.ok) {
+    return new Response("Unauthorized", { status: auth.status });
+  }
+
   const rows = await db
     .select({ tarball: submissionTable.tarball })
     .from(submissionTable)

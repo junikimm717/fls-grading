@@ -1,16 +1,22 @@
 import { db } from "@/app/db";
-import { submissionTable, usersTable } from "@/app/db/schema";
+import { submissionTable } from "@/app/db/schema";
 import { SubmissionStatus } from "@/app/db/types";
 import { eq, and } from "drizzle-orm";
 import fs from "fs/promises";
 import path from "path";
 import { FILESDIR } from "@/app/lib/env";
 import { gradeSubmission } from "@/app/lib/users";
+import { requireAdmin } from "@/app/lib/apikey";
 
 export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const auth = await requireAdmin(req);
+  if (!auth.ok) {
+    return new Response("Unauthorized", { status: auth.status });
+  }
+
   const form = await req.formData();
   const submissionId = Number((await params).id);
 

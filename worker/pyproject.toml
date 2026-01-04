@@ -1,5 +1,5 @@
 [project]
-name = "fls_worker"
+name = "fls-worker"
 version = "0.1.0"
 description = "Dead simple grading worker for 6.S913"
 readme = "README.md"
@@ -11,3 +11,7 @@ dependencies = [
 ]
 [project.scripts]
 fls-worker = "fls_worker.main:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
