@@ -57,10 +57,12 @@ export async function gradeSubmission(submissionId: number, passed: boolean) {
     .update(submissionTable)
     .set({ passed: passedInt, pending: SubmissionStatus.COMPLETED })
     .where(eq(submissionTable.id, submissionId));
-  await db
-    .update(usersTable)
-    .set({ passed: passedInt, updatedAt: new Date() })
-    .where(eq(usersTable.id, userId));
+  if (passed) {
+    await db
+      .update(usersTable)
+      .set({ passed: passedInt, updatedAt: new Date() })
+      .where(eq(usersTable.id, userId));
+  }
 }
 
 export async function addUsersAction(emails: string[]) {

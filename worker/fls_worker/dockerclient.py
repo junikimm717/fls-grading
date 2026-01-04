@@ -77,6 +77,25 @@ class DockerClient:
     # logging helpers
     # ------------------------------------------------------------------
 
+    def _write_stream_to_file(
+        self,
+        stream: Iterable[bytes],
+        *,
+        dest: Path,
+        max_bytes: int,
+    ) -> None:
+        total = 0
+        with dest.open("wb") as f:
+            for chunk in stream:
+                if not isinstance(chunk, (bytes, bytearray)):
+                    chunk = str(chunk).encode()
+
+                total += len(chunk)
+                if total > max_bytes:
+                    raise RuntimeError(f"artifact exceeded size limit ({total} bytes)")
+
+                f.write(chunk)
+
     def _append_logs(self, stream: Iterable[bytes]) -> None:
         with self.log_path.open("ab") as f:
             for chunk in stream:
@@ -135,6 +154,9 @@ class DockerClient:
         workspace_host = self._to_host_path(workspace_dir)
         output_dir = output_dir.resolve()
         output_dir.mkdir(parents=True, exist_ok=True)
+
+        log.info(f"pulling image {FLS_GRADING_BUILDER}")
+        self.client.images.pull(FLS_GRADING_BUILDER)
 
         log.info("creating builder container")
 
@@ -195,11 +217,28 @@ class DockerClient:
             if exit_code != 0:
                 raise RuntimeError(f"builder failed with exit code {exit_code}")
 
-            log.info("extracting bootable.img")
-            tar_stream, _ = container.get_archive("/dist/bootable.img")
+            # Bootable image streaming
+            exec_id = self.client.api.exec_create(
+                container.id,
+                cmd=["sh", "-c", "exec cat /dist/bootable.img"],
+                stdout=True,
+                stderr=False,
+            )["Id"]
+
+            stream = self.client.api.exec_start(exec_id, stream=True)
 
             bootable = output_dir / "bootable.img"
-            self._extract_single_file(tar_stream, dest=bootable)
+            self._write_stream_to_file(
+                stream,
+                dest=bootable,
+                max_bytes=220 * 1024 * 1024,  # e.g. 220MB cap
+            )
+            exit_code = inspect["ExitCode"]
+            if exit_code != 0:
+                raise RuntimeError(
+                    f"artifact stream failed with exit code {inspect['ExitCode']}"
+                )
+            # ------------------
 
             if not bootable.exists():
                 raise RuntimeError("bootable.img not found after extraction")
@@ -230,6 +269,9 @@ class DockerClient:
         dist_host = self._to_host_path(dist_dir)
 
         log.info("starting grader container")
+
+        log.info(f"pulling image {FLS_GRADING_GRADER}")
+        self.client.images.pull(FLS_GRADING_GRADER)
 
         container = self.client.containers.run(
             image=FLS_GRADING_GRADER,
