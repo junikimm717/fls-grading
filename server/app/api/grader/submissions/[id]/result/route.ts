@@ -31,14 +31,18 @@ export async function POST(
     return new Response("Forbidden", { status: 403 });
   }
 
-  const logPath = path.join(FILESDIR, `submission-${submissionId}.log`);
+  const logsDir = path.join(FILESDIR, "logs");
+  await fs.mkdir(logsDir, { recursive: true });
+  const logName = `submission-${submissionId}.log`
+
+  const logPath = path.join(logsDir, logName);
   await fs.writeFile(logPath, Buffer.from(await logs.arrayBuffer()));
 
   await db
     .update(submissionTable)
     .set({
       passed: passed ? 1 : 0,
-      logs: logPath,
+      logs: logName,
       pending: SubmissionStatus.COMPLETED,
     })
     .where(eq(submissionTable.id, Number(submissionId)));

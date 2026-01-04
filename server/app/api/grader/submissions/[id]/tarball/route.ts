@@ -19,7 +19,8 @@ export async function GET(
     return new Response("Not found", { status: 404 });
   }
 
-  const tarballPath = path.join(FILESDIR, rows[0].tarball);
+  const tarballsDir = path.join(FILESDIR, "tarballs");
+  const tarballPath = path.join(tarballsDir, rows[0].tarball);
   const data = await fs.readFile(tarballPath);
 
   return new Response(data, {
