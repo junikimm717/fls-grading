@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 
+import http.server
 import re
 import secrets
+import socketserver
 import subprocess
 import sys
+import threading
 import time
 from pathlib import Path
 from typing import Callable, Sequence
@@ -84,6 +87,38 @@ class TestFailure(Exception):
 
 def fail(msg: str) -> None:
     raise TestFailure(msg)
+
+
+# -------------------------
+# HTTP Server
+# -------------------------
+class NetworkTestHandler(http.server.BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path != "/net-test":
+            self.send_response(404)
+            self.end_headers()
+            return
+
+        body = b"network-ok\n"
+
+        self.send_response(200)
+        self.send_header("Content-Type", "text/plain")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    # Silence logging
+    def log_message(self, *args):
+        pass
+
+
+def start_http_server(
+    port: int = 8080,
+) -> tuple[threading.Thread, socketserver.TCPServer]:
+    httpd = socketserver.TCPServer(("0.0.0.0", port), NetworkTestHandler)
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    return thread, httpd
 
 
 # -------------------------
@@ -249,10 +284,9 @@ def wait_for_default_route(vm: VM, timeout: int = 20) -> None:
     fail("no default route installed")
 
 
-def test_ping(out: list[str]) -> None:
-    text = "\n".join(out)
-    if "bytes from" not in text and "0% packet loss" not in text:
-        fail("ping failed")
+def test_http_fetch(out: list[str]) -> None:
+    if out != ["network-ok"]:
+        fail("failed to fetch network test payload")
 
 
 def test_time(out: list[str]) -> None:
@@ -281,7 +315,10 @@ test1 = [
     CommandTest("pgrep dhcpcd", lambda o: require_pids(o, "dhcpcd")),
     CommandTest("pgrep chronyd || pgrep chrony", lambda o: require_pids(o, "chrony")),
     SyncPoint(wait_for_default_route),
-    CommandTest("ping -c 2 1.1.1.1", test_ping),
+    CommandTest(
+        "wget -qO- http://10.0.2.2:8080/net-test",
+        test_http_fetch,
+    ),
     CommandTest("date +%Y", test_time),
     CommandTest(f"echo hello > /{filename}", lambda _: None),
     CommandTest("sync", lambda _: None),
@@ -302,6 +339,7 @@ def run_suite(tests: Sequence[Test]) -> None:
 
 
 if __name__ == "__main__":
+    thread, httpd = start_http_server(8080)
     try:
         run_suite(test1)
         run_suite(test2)
@@ -309,3 +347,7 @@ if __name__ == "__main__":
     except TestFailure as e:
         print(f"\n>>>> FAIL: {e}")
         sys.exit(1)
+    finally:
+        httpd.shutdown()
+        httpd.server_close()
+        thread.join()
