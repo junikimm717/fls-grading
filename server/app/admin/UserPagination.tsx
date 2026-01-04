@@ -15,7 +15,7 @@ export default function UserPagination({
   function setPage(nextPage: number) {
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", String(nextPage));
-    router.push(`/admin/users?${params.toString()}`);
+    router.push(`/admin?${params.toString()}`);
   }
 
   return (
