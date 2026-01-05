@@ -20,7 +20,7 @@ export default async function Navbar() {
         </div>
 
         {/* Right: everything else */}
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-6 text-sm">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-6 text-base sm:text-sm">
           {session ? (
             <>
               {/* Nav links */}

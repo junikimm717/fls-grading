@@ -7,7 +7,7 @@ export default function SignOutButton() {
   return (
     <button
       type="submit"
-      className="text-red-600 hover:text-red-700 hover:underline text-left"
+      className="text-red-600 hover:text-red-700 hover:underline text-left w-fit"
       onClick={() => signOut()}
     >
       Log Out
