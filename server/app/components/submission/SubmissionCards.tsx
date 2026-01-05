@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ConfirmActionModal } from "@/app/components/ConfirmActionModal";
 import { gradeSubmissionClient } from "@/app/lib/users-client";
-import { SubmissionStatus } from "@/app/db/types";
+import RenderStatus from "./RenderStatus";
 
 export function SubmissionCards({
   submissions,
@@ -38,15 +38,7 @@ export function SubmissionCards({
 
           <div className="text-sm mt-2">
             Status:{" "}
-            {s.pending === SubmissionStatus.WAITING
-              ? "Waiting"
-              : s.pending === SubmissionStatus.GRADING
-                ? "Grading"
-                : "Completed"}
-          </div>
-
-          <div className="text-sm">
-            Passed: {s.passed === 1 ? "Yes" : s.passed === 0 ? "No" : "—"}
+            <RenderStatus status={s.pending} passed={s.passed} />
           </div>
 
           {isAdmin && (

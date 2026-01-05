@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SubmissionView } from "./types";
 import { isAdminQuery } from "@/app/lib/is-admin";
+import RenderStatus from "./RenderStatus";
 
 export async function OneSubmission({
   submission: { submission, user },
@@ -34,16 +35,7 @@ export async function OneSubmission({
 
       <div className="text-sm">
         <strong>Status:</strong>{" "}
-        {submission.pending === 0
-          ? "Waiting"
-          : submission.pending === 1
-            ? "Grading"
-            : "Completed"}
-      </div>
-
-      <div className="text-sm">
-        <strong>Passed:</strong>{" "}
-        {submission.passed === 1 ? "Yes" : submission.passed === 0 ? "No" : "—"}
+        <RenderStatus status={submission.pending} passed={submission.passed} />
       </div>
 
       {showUserActions && (

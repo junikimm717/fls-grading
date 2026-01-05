@@ -5,7 +5,7 @@ import { useState } from "react";
 import { SubmissionRow } from "./types";
 import { ConfirmActionModal } from "@/app/components/ConfirmActionModal";
 import { gradeSubmissionClient } from "@/app/lib/users-client";
-import { SubmissionStatus } from "@/app/db/types";
+import RenderStatus from "./RenderStatus";
 
 export function SubmissionTable({
   submissions,
@@ -28,7 +28,6 @@ export function SubmissionTable({
             <th className="p-2">ID</th>
             <th className="p-2">Created</th>
             <th className="p-2">Status</th>
-            <th className="p-2">Passed</th>
             {isAdmin && <th className="p-2">Actions</th>}
           </tr>
         </thead>
@@ -47,15 +46,7 @@ export function SubmissionTable({
               <td className="p-2">{new Date(s.createdAt).toLocaleString()}</td>
 
               <td className="p-2">
-                {s.pending === SubmissionStatus.WAITING
-                  ? "Waiting"
-                  : s.pending === SubmissionStatus.GRADING
-                    ? "Grading"
-                    : "Completed"}
-              </td>
-
-              <td className="p-2">
-                {s.passed === 1 ? "Yes" : s.passed === 0 ? "No" : "—"}
+                <RenderStatus status={s.pending} passed={s.passed} />
               </td>
 
               {isAdmin && (
