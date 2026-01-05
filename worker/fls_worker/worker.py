@@ -2,6 +2,7 @@
 import logging
 import shutil
 import tarfile
+import traceback
 import uuid
 from pathlib import Path
 
@@ -32,6 +33,7 @@ log = logging.getLogger("fls-grade")
 # ------------------------------------------------------------
 # safe tar extraction
 # ------------------------------------------------------------
+
 
 def safe_extract_tar(tar_path: Path, dest: Path) -> None:
     """
@@ -88,6 +90,7 @@ def safe_extract_tar(tar_path: Path, dest: Path) -> None:
 
             # everything else is forbidden
             raise RuntimeError(f"disallowed tar entry type: {name}")
+
 
 # ------------------------------------------------------------
 # main grading pass
@@ -189,6 +192,11 @@ def run_once() -> None:
     except Exception:
         # any other unexpected failure: fail submission but do not crash worker
         log.exception("unexpected error during grading")
+
+        with log_path.open("a", encoding="utf-8") as f:
+            f.write("\n--- grader traceback ---\n")
+            traceback.print_exc(file=f)
+
         try:
             client.submit_result(
                 submission,
