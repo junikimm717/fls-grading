@@ -4,6 +4,7 @@ import { db } from "@/app/db";
 import { usersTable } from "@/app/db/schema";
 import { eq } from "drizzle-orm";
 import { UserSubmissions } from "@/app/components/UserSubmissions";
+import { AvailableWorkers } from "../components/AvailableWorkers";
 
 export default async function PortalPage() {
   const session = await auth();
@@ -37,6 +38,8 @@ export default async function PortalPage() {
           )}
         </div>
       </div>
+
+      <AvailableWorkers />
 
       {/* Submissions */}
       <UserSubmissions userId={user.id} />

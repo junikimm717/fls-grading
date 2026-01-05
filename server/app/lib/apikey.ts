@@ -108,5 +108,5 @@ export async function requireAdmin(req: Request) {
   if (!result) return { ok: false, status: 401 };
   if (!result.isAdmin) return { ok: false, status: 403 };
 
-  return { ok: true, admin: result };
+  return { ok: true, key: result };
 }

@@ -48,7 +48,7 @@ export function ApiKeysList({ keys }: { keys: ApiKeyRow[] }) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">API Keys</h1>
+        <h1 className="text-xl font-semibold">Worker API Keys</h1>
 
         <button
           onClick={() => setIsCreateModalOpen(true)}
@@ -99,7 +99,7 @@ export function ApiKeysList({ keys }: { keys: ApiKeyRow[] }) {
                   colSpan={4}
                   className="px-3 py-6 text-center text-gray-500"
                 >
-                  No active API keys
+                  No active worker API keys
                 </td>
               </tr>
             )}

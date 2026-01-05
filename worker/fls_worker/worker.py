@@ -11,6 +11,7 @@ from .arch import detect_arch
 from .config import FLS_MOUNT_PREFIX
 from .dockerclient import DockerClient
 from .errors import (
+    FLSAPIError,
     FLSAlreadyClaimedError,
     FLSAuthError,
     FLSBadResponseError,
@@ -135,27 +136,27 @@ def run_once() -> None:
 
     log_path = base_dir / "logs.txt"
 
+
     try:
-        tar_dir.mkdir(parents=True)
-        src_dir.mkdir()
-        out_dir.mkdir()
-
         tar_path = tar_dir / "submission.tar"
+        try:
+            tar_dir.mkdir(parents=True)
+            src_dir.mkdir()
+            out_dir.mkdir()
+            # If Docker is down, this is an infra error
+            docker = DockerClient(log_path=log_path)
 
-        # ----------------------------------------------------
-        # download tarball
-        # ----------------------------------------------------
+        except Exception as e:
+            log.exception("Infrastructure setup failed (FS or Docker)")
+            raise FLSAPIError("Local infrastructure failure") from e
+
+        # download and extract
         client.download_tarball(submission, tar_path)
-
-        # ----------------------------------------------------
-        # unpack tarball safely
-        # ----------------------------------------------------
         safe_extract_tar(tar_path, src_dir)
 
         # ----------------------------------------------------
         # run builder + grader
         # ----------------------------------------------------
-        docker = DockerClient(log_path=log_path)
 
         passed = False
 
@@ -181,7 +182,7 @@ def run_once() -> None:
             log_path=log_path,
         )
 
-    except (FLSAuthError, FLSBadResponseError, FLSNotFoundError):
+    except (FLSAPIError, FLSAuthError, FLSBadResponseError, FLSNotFoundError):
         # infra error → cancel immediately
         log.exception("infrastructure error; cancelling submission")
         try:

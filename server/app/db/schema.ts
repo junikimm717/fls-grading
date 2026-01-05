@@ -61,6 +61,7 @@ export const apiKeyTable = sqliteTable("api_key", {
   createdAt: integer("createdAt", {
     mode: "timestamp_ms",
   }).notNull(),
+  pingedAt: integer("pinged_at"),
 });
 
 // ripped from auth.js

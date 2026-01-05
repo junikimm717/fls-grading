@@ -1,5 +1,5 @@
 import { db } from "@/app/db";
-import { submissionTable } from "@/app/db/schema";
+import { apiKeyTable, submissionTable } from "@/app/db/schema";
 import { SubmissionStatus } from "@/app/db/types";
 import { requireAdmin } from "@/app/lib/apikey";
 import { eq, and } from "drizzle-orm";
@@ -9,6 +9,15 @@ export async function GET(req: Request) {
   if (!auth.ok) {
     return new Response("Unauthorized", { status: auth.status });
   }
+  if (!auth.key) {
+    throw Error("Impossible, auth.ok is true but auth.key doesn't exist");
+  }
+  await db
+    .update(apiKeyTable)
+    .set({ pingedAt: Date.now() })
+    .where(eq(apiKeyTable.id, auth.key.keyId));
+
+  // we need to consume the worker
 
   const arch = new URL(req.url).searchParams.get("arch");
   if (!arch) {
