@@ -201,7 +201,6 @@ def run_once() -> None:
     finally:
         # best-effort cleanup
         try:
-            pass
-            #shutil.rmtree(base_dir)
+            shutil.rmtree(base_dir)
         except Exception:
             log.warning("failed to clean up %s", base_dir)
