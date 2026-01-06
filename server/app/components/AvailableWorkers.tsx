@@ -1,8 +1,12 @@
 import { db } from "@/app/db";
 import { apiKeyTable } from "@/app/db/schema";
 import { and, gte, isNotNull, isNull } from "drizzle-orm";
+import LoadingSpinner from "./LoadingSpinner";
+
+export const dynamic = "force-dynamic";
 
 export async function AvailableWorkers() {
+  const dateNow = Date.now();
   const availableKeys = await db
     .select({
       id: apiKeyTable.id,
@@ -12,23 +16,29 @@ export async function AvailableWorkers() {
     .where(
       and(
         isNotNull(apiKeyTable.pingedAt),
-        gte(apiKeyTable.pingedAt, Date.now() - 1000 * 60),
+        gte(apiKeyTable.pingedAt, dateNow - 1000 * 60),
         isNull(apiKeyTable.revokedAt),
       ),
     );
 
   return (
-    <div className="border rounded p-4 bg-white">
-      <div className="text-sm text-gray-600">Available Grading Workers</div>
+    <div className="p-4 bg-white rounded border">
+      <div className="text-sm text-gray-600">
+        {availableKeys.length ? "" : "No"} Available Grading Workers
+      </div>
       {availableKeys.length ? (
-        <div className="gap-2">
+        <div className="flex flex-col gap-2">
           {availableKeys.map((key) => (
-            <div className="" key={key.id}>{key.name || "Unnamed"}</div>
+            <span className="inline-flex gap-2 items-center font-semibold" key={key.id}>
+              {key.name || "Unnamed"}
+              <span className="flex gap-1 items-center text-green-600">
+                <LoadingSpinner className="w-3 h-3" />
+                Alive
+              </span>
+            </span>
           ))}
         </div>
-      ) : (
-        <div>No available workers</div>
-      )}
+      ) : null}
     </div>
   );
 }
