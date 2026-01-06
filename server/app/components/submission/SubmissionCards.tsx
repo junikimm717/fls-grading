@@ -15,7 +15,7 @@ export function SubmissionCards({
   isAdmin: boolean;
 }) {
   const router = useRouter();
-  const [pending, setPending] = useState<{
+  const [pendingAction, setPendingAction] = useState<{
     id: number;
     nextPassed: boolean;
   } | null>(null);
@@ -42,28 +42,53 @@ export function SubmissionCards({
           <div className="mt-2 text-sm">Arch: {s.arch}</div>
 
           {isAdmin && (
-            <button
-              className="mt-2 text-sm underline"
-              onClick={() =>
-                setPending({ id: s.id, nextPassed: s.passed !== 1 })
-              }
-            >
-              Toggle grade
-            </button>
+            <div className="mt-2 text-sm">
+              <button
+                className="mx-1 text-sm text-green-700 underline"
+                onClick={() =>
+                  setPendingAction({
+                    id: s.id,
+                    nextPassed: true,
+                  })
+                }
+              >
+                Pass
+              </button>
+              <button
+                className="mx-1 text-sm text-red-700 underline"
+                onClick={() =>
+                  setPendingAction({
+                    id: s.id,
+                    nextPassed: false,
+                  })
+                }
+              >
+                Fail
+              </button>
+            </div>
           )}
         </div>
       ))}
 
-      {pending && (
+      {pendingAction && (
         <ConfirmActionModal
-          title="Change grade"
-          description={`Change submission #${pending.id}?`}
+          title="Manually change grade"
+          description={
+            <>
+              Are you sure you want to mark submission{" "}
+              <strong>#{pendingAction.id}</strong> as{" "}
+              <strong>{pendingAction.nextPassed ? "PASSED" : "FAILED"}</strong>?
+            </>
+          }
           confirmLabel="Confirm"
-          danger={!pending.nextPassed}
-          onCancel={() => setPending(null)}
+          danger
+          onCancel={() => setPendingAction(null)}
           onConfirm={async () => {
-            await gradeSubmissionClient(pending.id, pending.nextPassed);
-            setPending(null);
+            await gradeSubmissionClient(
+              pendingAction.id,
+              pendingAction.nextPassed,
+            );
+            setPendingAction(null);
             router.refresh();
           }}
         />

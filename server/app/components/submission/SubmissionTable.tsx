@@ -93,7 +93,7 @@ export function SubmissionTable({
             </>
           }
           confirmLabel="Confirm"
-          danger={!pendingAction.nextPassed}
+          danger
           onCancel={() => setPendingAction(null)}
           onConfirm={async () => {
             await gradeSubmissionClient(
