@@ -77,15 +77,18 @@ class DockerClient:
     def _to_host_path(self, p: Path) -> Path:
         """
         Translate a path under mount_prefix to a real host path.
+
+        We must guarantee that any directory specified in _to_host_path DOES
+        NOT have any symlinks or non-ordinary files.
         """
-        p = p.resolve()
         try:
-            rel = p.relative_to(self.mount_prefix)
+            normalized_container_path = Path(os.path.normpath(Path("/") / p))
+            rel = normalized_container_path.relative_to(self.mount_prefix)
+            return self.host_root / rel
         except ValueError:
             raise RuntimeError(
                 f"path {p} is not under mount prefix {self.mount_prefix}"
             )
-        return self.host_root / rel
 
     # ------------------------------------------------------------------
     # logging helpers
@@ -131,8 +134,6 @@ class DockerClient:
 
                         # write truncation notice once
                         f.write(TRUNCATION_NOTICE)
-
-                f.flush()
 
     # ------------------------------------------------------------------
     # builder
@@ -185,7 +186,7 @@ class DockerClient:
             mem_limit="8g",
             memswap_limit="8g",
             nano_cpus=usable_cpus * 1_000_000_000,
-            pids_limit=256,
+            pids_limit=512,
         )
 
         try:
@@ -202,6 +203,7 @@ class DockerClient:
                 ],
                 stdout=True,
                 stderr=True,
+                tty=True,
             )["Id"]
 
             output = self.client.api.exec_start(
@@ -233,6 +235,7 @@ class DockerClient:
                 dest=bootable,
                 max_bytes=220 * 1024 * 1024,  # e.g. 220MB cap
             )
+            inspect = self.client.api.exec_inspect(exec_id)
             exit_code = inspect["ExitCode"]
             if exit_code != 0:
                 raise RuntimeError(

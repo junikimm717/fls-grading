@@ -1,17 +1,33 @@
 #!/usr/bin/env bash
-
 set -euo pipefail
 
 export DIST
 export SRC
 
 cd /workspace
-ROOTFS="$DIST/busybox" timeout -f 5m ./busybox/build.sh
-ROOTFS="$DIST/kernel" timeout -f 20m ./kernel/build.sh
-ROOTFS="$DIST/user" timeout -f 5m ./user/build.sh
-ROOTFS="$DIST/image" timeout -f 5m ./image/build.sh
+
+run_stage() {
+  local label="$1"
+  local limit="$2"
+  local script="$3"
+
+  local rootfs="$DIST/$label"
+
+  if ! timeout "$limit" env ROOTFS="$rootfs" "$script"; then
+    status=$?
+    if [ "$status" -eq 124 ]; then
+      echo "[fls] ERROR: $label stage timed out after $limit" >&2
+    fi
+    exit "$status"
+  fi
+}
+
+run_stage busybox 5m  ./busybox/build.sh
+run_stage kernel  20m ./kernel/build.sh
+run_stage user    5m  ./user/build.sh
+run_stage image   5m  ./image/build.sh
 
 test -f "$DIST/bootable.img" || {
-  echo "You never created an image at $DIST/bootable.img";
+  echo "You never created an image at $DIST/bootable.img"
   exit 1
 }

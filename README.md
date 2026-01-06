@@ -20,6 +20,12 @@ permissions, and override grades when necessary. One special user, defined in
 environment configuration as `DICTATOR`, is guaranteed permanent administrative
 access and cannot be demoted 😈.
 
+## Setup
+
+Please check respective instructions in `./server/` or `./worker/` to set up
+development of either the server or the grading worker. Please note that all
+projects in this repository require a working docker installation.
+
 ## Worker Security
 
 We use docker containers to grade student submissions. The images can be found
