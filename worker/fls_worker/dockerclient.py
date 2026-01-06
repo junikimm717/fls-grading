@@ -1,6 +1,7 @@
 import logging
 import tarfile
 from pathlib import Path
+import os
 from typing import Iterable
 
 import docker
@@ -11,6 +12,11 @@ from .config import (
     FLS_HOST_ROOT,
     FLS_MOUNT_PREFIX,
 )
+
+host_cpus = os.cpu_count()
+if host_cpus is None:
+    raise RuntimeError("failed to detect host CPU count")
+usable_cpus = max(1, host_cpus - 1)
 
 log = logging.getLogger("fls-docker")
 
@@ -184,8 +190,9 @@ class DockerClient:
                 "SRC": "/writable_src",
             },
             mem_limit="8g",
-            nano_cpus=8_000_000_000,  # 8 cores
-            pids_limit=512,
+            memswap_limit="8g",
+            nano_cpus=usable_cpus * 1_000_000_000,
+            pids_limit=256,
         )
 
         try:
