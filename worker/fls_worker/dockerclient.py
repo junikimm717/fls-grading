@@ -1,7 +1,6 @@
 import logging
-import tarfile
-from pathlib import Path
 import os
+from pathlib import Path
 from typing import Iterable
 
 import docker
@@ -12,6 +11,15 @@ from .config import (
     FLS_HOST_ROOT,
     FLS_MOUNT_PREFIX,
 )
+
+MAX_LOG_BYTES = 20 * 1024 * 1024  # 20MB
+TRUNCATION_NOTICE = (
+    b"\n\n"
+    b"====================\n"
+    b"[fls] LOG TRUNCATED: output exceeded 20MB\n"
+    b"====================\n"
+)
+
 
 host_cpus = os.cpu_count()
 if host_cpus is None:
@@ -103,43 +111,28 @@ class DockerClient:
                 f.write(chunk)
 
     def _append_logs(self, stream: Iterable[bytes]) -> None:
+        written = 0
+
         with self.log_path.open("ab") as f:
             for chunk in stream:
-                if isinstance(chunk, bytes):
-                    f.write(chunk)
-                else:
-                    f.write(str(chunk).encode())
+                if not isinstance(chunk, (bytes, bytearray)):
+                    chunk = str(chunk).encode()
+
+                if written < MAX_LOG_BYTES:
+                    remaining = MAX_LOG_BYTES - written
+
+                    if len(chunk) <= remaining:
+                        f.write(chunk)
+                        written += len(chunk)
+                    else:
+                        # write partial chunk
+                        f.write(chunk[:remaining])
+                        written += remaining
+
+                        # write truncation notice once
+                        f.write(TRUNCATION_NOTICE)
+
                 f.flush()
-
-    # ------------------------------------------------------------------
-    # archive extraction
-    # ------------------------------------------------------------------
-
-    def _extract_single_file(
-        self,
-        tar_stream: Iterable[bytes],
-        *,
-        dest: Path,
-    ) -> None:
-        """
-        Extract exactly one file from a tar stream.
-
-        Note this is only for copying out one bootable image; it is fundamentally
-        not secure for untrusted code.
-        """
-        with tarfile.open(fileobj=_IterableIO(tar_stream), mode="r|*") as tar:
-            members = tar.getmembers()
-            if len(members) != 1:
-                raise RuntimeError(
-                    f"expected exactly one file in archive, found {len(members)}"
-                )
-            member = members[0]
-            extracted = tar.extractfile(member)
-            if extracted is None:
-                raise RuntimeError("failed to extract file from archive")
-
-            with dest.open("wb") as f:
-                f.write(extracted.read())
 
     # ------------------------------------------------------------------
     # builder
@@ -308,31 +301,3 @@ class DockerClient:
                 container.remove(force=True)
             except Exception:
                 pass
-
-
-# ----------------------------------------------------------------------
-# utility: iterable → file-like object
-# ----------------------------------------------------------------------
-
-
-class _IterableIO:
-    """
-    Wrap an iterable of bytes so tarfile can read it as a file object.
-    """
-
-    def __init__(self, iterable: Iterable[bytes]):
-        self._iter = iter(iterable)
-        self._buffer = b""
-
-    def read(self, size: int = -1) -> bytes:
-        if size < 0:
-            return b"".join(self._iter)
-
-        while len(self._buffer) < size:
-            try:
-                self._buffer += next(self._iter)
-            except StopIteration:
-                break
-
-        out, self._buffer = self._buffer[:size], self._buffer[size:]
-        return out

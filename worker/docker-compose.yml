@@ -1,0 +1,28 @@
+# Please refrain using this outside a dedicated server environment.
+
+services:
+  fls-worker:
+    image: ghcr.io/junikimm717/fls-grading/worker
+    container_name: fls-grading-worker
+    restart: unless-stopped
+    init: true
+
+    environment:
+      # === grading config ===
+      FLS_GRADING_SECRET: "APIKEY"
+      FLS_GRADING_BASEURL: "https://6s913.mit.junic.kim"
+      FLS_GRADING_GRADER: "ghcr.io/junikimm717/fls-grading/grader"
+      FLS_GRADING_BUILDER: "ghcr.io/junikimm717/fls-grading/dev"
+
+      FLS_HOST_ROOT: "${PWD}"
+
+      FLS_MOUNT_PREFIX: "/files"
+
+    volumes:
+      - type: bind
+        source: .
+        target: /files
+
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock

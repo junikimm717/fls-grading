@@ -23,7 +23,7 @@ export function SubmissionTable({
   return (
     <>
       <table className="w-full border">
-        <thead className="bg-gray-50 text-left">
+        <thead className="text-left bg-gray-50">
           <tr>
             <th className="p-2">ID</th>
             <th className="p-2">Created</th>
@@ -54,15 +54,26 @@ export function SubmissionTable({
               {isAdmin && (
                 <td className="p-2">
                   <button
-                    className="text-sm underline"
+                    className="mx-1 text-sm text-green-700 underline"
                     onClick={() =>
                       setPendingAction({
                         id: s.id,
-                        nextPassed: s.passed !== 1,
+                        nextPassed: true,
                       })
                     }
                   >
-                    Toggle
+                    Pass
+                  </button>
+                  <button
+                    className="mx-1 text-sm text-red-700 underline"
+                    onClick={() =>
+                      setPendingAction({
+                        id: s.id,
+                        nextPassed: false,
+                      })
+                    }
+                  >
+                    Fail
                   </button>
                 </td>
               )}

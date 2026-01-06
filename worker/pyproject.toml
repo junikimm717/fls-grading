@@ -17,3 +17,8 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 packages = ["fls_worker"]
+
+[dependency-groups]
+dev = [
+    "pylint>=4.0.4",
+]

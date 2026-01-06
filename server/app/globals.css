@@ -18,3 +18,8 @@
   --font-sans: var(--font-roboto-sans);
   --font-mono: var(--font-roboto-mono);
 }
+
+/* Why is this not basic */
+button {
+  @apply cursor-pointer;
+}
