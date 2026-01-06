@@ -23,18 +23,18 @@ export default async function PortalPage() {
   if (!user) notFound();
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
+    <div className="py-6 px-4 mx-auto space-y-6 max-w-5xl">
       {/* Header */}
-      <div className="border rounded p-4 bg-white">
+      <div className="p-4 bg-white border">
         <div className="text-sm text-gray-600">Logged in as</div>
-        <div className="text-lg font-mono">{user.email}</div>
+        <div className="font-mono text-lg">{user.email}</div>
 
         <div className="mt-2">
           <span className="font-semibold">Course status:</span>{" "}
           {user.passed === 1 ? (
-            <span className="text-green-600 font-semibold">PASSED</span>
+            <span className="font-semibold text-green-600">PASSED</span>
           ) : (
-            <span className="text-red-600 font-semibold">NOT PASSED</span>
+            <span className="font-semibold text-red-600">NOT PASSED</span>
           )}
         </div>
       </div>

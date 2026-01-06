@@ -35,26 +35,23 @@ export default function UserSearch() {
   }
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className="flex flex-wrap gap-3 items-end mb-6"
-    >
+    <form onSubmit={onSubmit} className="flex flex-wrap gap-3 items-end mb-6">
       <div>
-        <label className="block text-sm mb-1">Email</label>
+        <label className="block mb-1 text-sm">Email</label>
         <input
           name="email"
           defaultValue={searchParams.get("email") ?? ""}
           placeholder="user@mit.edu"
-          className="border rounded px-2 py-1 w-64"
+          className="py-1 px-2 w-64 border"
         />
       </div>
 
       <div>
-        <label className="block text-sm mb-1">Role</label>
+        <label className="block mb-1 text-sm">Role</label>
         <select
           name="admin"
           defaultValue={searchParams.get("admin") ?? "all"}
-          className="border rounded px-2 py-1"
+          className="py-1 px-2 border"
         >
           <option value="all">All users</option>
           <option value="admin">Admins only</option>
@@ -65,7 +62,7 @@ export default function UserSearch() {
       <button
         type="submit"
         disabled={pending}
-        className="px-4 py-1.5 rounded bg-blue-600 text-white"
+        className="py-1.5 px-4 text-white bg-blue-600"
       >
         Search
       </button>

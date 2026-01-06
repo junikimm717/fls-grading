@@ -183,18 +183,18 @@ export default async function NewSubmissionPage() {
       : "x86_64";
 
   return (
-    <div className="max-w-xl mx-auto px-4 py-6 space-y-6">
-      <div className="border rounded p-4 bg-white">
+    <div className="py-6 px-4 mx-auto space-y-6 max-w-xl">
+      <div className="p-4 bg-white border">
         <div className="text-sm text-gray-600">Submitting as</div>
         <div className="font-mono">{user.email}</div>
       </div>
 
       <form
         action={createSubmission}
-        className="border rounded p-4 bg-white space-y-4"
+        className="p-4 space-y-4 bg-white border"
       >
         <div>
-          <label className="block text-sm font-medium mb-1">
+          <label className="block mb-1 text-sm font-medium">
             Tarball (.tar.gz, max 5MB)
           </label>
           <input
@@ -207,9 +207,9 @@ export default async function NewSubmissionPage() {
         </div>
 
         <div>
-          <div className="block text-sm font-medium mb-1">Architecture</div>
+          <div className="block mb-1 text-sm font-medium">Architecture</div>
           <div className="flex gap-4">
-            <label className="flex items-center gap-2 text-sm">
+            <label className="flex gap-2 items-center text-sm">
               <input
                 type="radio"
                 name="arch"
@@ -219,7 +219,7 @@ export default async function NewSubmissionPage() {
               x86_64
             </label>
 
-            <label className="flex items-center gap-2 text-sm">
+            <label className="flex gap-2 items-center text-sm">
               <input
                 type="radio"
                 name="arch"
@@ -229,15 +229,12 @@ export default async function NewSubmissionPage() {
               aarch64
             </label>
           </div>
-          <div className="text-xs text-gray-600 mt-1">
+          <div className="mt-1 text-xs text-gray-600">
             Default is your saved preference (or x86_64 if unset).
           </div>
         </div>
 
-        <button
-          type="submit"
-          className="px-3 py-2 rounded bg-blue-600 text-white"
-        >
+        <button type="submit" className="py-2 px-3 text-white bg-blue-600">
           Submit
         </button>
       </form>

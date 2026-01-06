@@ -22,14 +22,17 @@ export async function AvailableWorkers() {
     );
 
   return (
-    <div className="p-4 bg-white rounded border">
+    <div className="p-4 bg-white border">
       <div className="text-sm text-gray-600">
         {availableKeys.length ? "" : "No"} Available Grading Workers
       </div>
       {availableKeys.length ? (
         <div className="flex flex-col gap-2">
           {availableKeys.map((key) => (
-            <span className="inline-flex gap-2 items-center font-semibold" key={key.id}>
+            <span
+              className="inline-flex gap-2 items-center font-semibold"
+              key={key.id}
+            >
               {key.name || "Unnamed"}
               <span className="flex gap-1 items-center text-green-600">
                 <LoadingSpinner className="w-3 h-3" />

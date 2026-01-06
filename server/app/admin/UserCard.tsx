@@ -20,7 +20,7 @@ export function UserCard({
   onDeleteAction,
 }: Props) {
   return (
-    <div className="border rounded p-4 space-y-3 bg-white">
+    <div className="p-4 space-y-3 bg-white border">
       <div className="font-mono text-sm break-all">{user.email}</div>
 
       <div className="flex justify-between text-sm">
@@ -47,7 +47,7 @@ export function UserCard({
 
       {!isSelf && (
         <button
-          className="text-red-600 underline text-sm"
+          className="text-sm text-red-600 underline"
           onClick={onDeleteAction}
         >
           Delete

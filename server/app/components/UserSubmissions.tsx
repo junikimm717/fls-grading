@@ -15,6 +15,7 @@ export async function UserSubmissions({ userId }: Props) {
       createdAt: submissionTable.createdAt,
       passed: submissionTable.passed,
       pending: submissionTable.pending,
+      arch: submissionTable.arch,
     })
     .from(submissionTable)
     .where(eq(submissionTable.userId, userId))
@@ -22,10 +23,5 @@ export async function UserSubmissions({ userId }: Props) {
 
   const isAdmin = await isAdminQuery();
 
-  return (
-    <SubmissionListClient
-      submissions={submissions}
-      isAdmin={isAdmin}
-    />
-  );
+  return <SubmissionListClient submissions={submissions} isAdmin={isAdmin} />;
 }

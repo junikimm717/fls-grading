@@ -38,14 +38,14 @@ export default function BatchAddUsers() {
         placeholder={`alice@mit.edu
 bob@mit.edu
 carol@mit.edu`}
-        className="w-full border rounded p-2 font-mono mb-4"
+        className="p-2 mb-4 w-full font-mono border"
       />
 
       <div className="flex justify-end">
         <button
           onClick={onPreview}
           disabled={raw.trim().length === 0}
-          className="px-4 py-2 bg-blue-600 text-white rounded"
+          className="py-2 px-4 text-white bg-blue-600"
         >
           Preview & Add
         </button>
@@ -55,12 +55,12 @@ carol@mit.edu`}
         <ConfirmActionModal
           title="Confirm user creation"
           description={
-            <div className="max-h-48 overflow-auto text-sm">
+            <div className="overflow-auto max-h-48 text-sm">
               <p className="mb-2">
                 You are about to add <b>{emails.length}</b> users:
               </p>
 
-              <ul className="list-disc list-inside font-mono">
+              <ul className="font-mono list-disc list-inside">
                 {emails.map((e) => (
                   <li key={e}>{e}</li>
                 ))}

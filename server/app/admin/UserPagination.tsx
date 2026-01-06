@@ -23,7 +23,7 @@ export default function UserPagination({
       <button
         disabled={page <= 1}
         onClick={() => setPage(page - 1)}
-        className="px-3 py-1 border rounded disabled:opacity-50"
+        className="py-1 px-3 border disabled:opacity-50"
       >
         Previous
       </button>
@@ -33,7 +33,7 @@ export default function UserPagination({
       <button
         disabled={!hasNext}
         onClick={() => setPage(page + 1)}
-        className="px-3 py-1 border rounded disabled:opacity-50"
+        className="py-1 px-3 border disabled:opacity-50"
       >
         Next
       </button>

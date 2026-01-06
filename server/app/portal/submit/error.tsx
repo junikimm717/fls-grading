@@ -18,17 +18,13 @@ export default function SubmitError({
 
   if (error.name === "SubmissionError") {
     return (
-      <div className="max-w-xl mx-auto px-4 py-6">
-        <div className="border rounded bg-red-50 p-4 space-y-3">
-          <div className="font-medium text-red-700">
-            Submission failed
-          </div>
-          <div className="text-sm text-red-600">
-            {error.message}
-          </div>
+      <div className="py-6 px-4 mx-auto max-w-xl">
+        <div className="p-4 space-y-3 bg-red-50 border">
+          <div className="font-medium text-red-700">Submission failed</div>
+          <div className="text-sm text-red-600">{error.message}</div>
           <button
             onClick={reset}
-            className="mt-2 px-3 py-1.5 rounded bg-red-600 text-white"
+            className="py-1.5 px-3 mt-2 text-white bg-red-600"
           >
             Try again
           </button>
@@ -39,7 +35,7 @@ export default function SubmitError({
 
   // fallback for real bugs
   return (
-    <div className="max-w-xl mx-auto px-4 py-6">
+    <div className="py-6 px-4 mx-auto max-w-xl">
       <h2 className="font-semibold">Something went wrong</h2>
       <p className="text-sm text-gray-600">
         This looks like a server error. Please contact staff.

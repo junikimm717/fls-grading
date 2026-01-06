@@ -22,19 +22,17 @@ export function ConfirmActionModal({
   const [pending, startTransition] = useTransition();
 
   return (
-    <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded shadow-md w-[420px]">
-        <h2 className="font-semibold text-lg mb-2">{title}</h2>
+    <div className="flex fixed inset-0 z-50 justify-center items-center bg-black/30">
+      <div className="p-6 bg-white shadow-md w-[420px]">
+        <h2 className="mb-2 text-lg font-semibold">{title}</h2>
 
-        <div className="mb-4 text-sm text-gray-700">
-          {description}
-        </div>
+        <div className="mb-4 text-sm text-gray-700">{description}</div>
 
-        <div className="flex justify-end gap-3">
+        <div className="flex gap-3 justify-end">
           <button
             onClick={onCancel}
             disabled={pending}
-            className="px-3 py-1 border rounded"
+            className="py-1 px-3 border"
           >
             Cancel
           </button>
@@ -46,7 +44,7 @@ export function ConfirmActionModal({
               })
             }
             disabled={pending}
-            className={`px-3 py-1 rounded text-white ${
+            className={`px-3 py-1  text-white ${
               danger ? "bg-red-600" : "bg-blue-600"
             }`}
           >

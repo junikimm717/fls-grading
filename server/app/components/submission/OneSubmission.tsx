@@ -12,7 +12,7 @@ export async function OneSubmission({
 }) {
   const isAdmin = await isAdminQuery();
   return (
-    <div className="border rounded p-4 bg-white space-y-2">
+    <div className="p-4 space-y-2 bg-white border">
       <div className="flex justify-between">
         Submission ID #{submission.id}
         <span className="text-sm text-gray-600">

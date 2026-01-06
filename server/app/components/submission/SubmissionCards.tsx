@@ -23,7 +23,7 @@ export function SubmissionCards({
   return (
     <>
       {submissions.map((s) => (
-        <div key={s.id} className="border rounded p-3 bg-white">
+        <div key={s.id} className="p-3 bg-white border">
           <div className="flex justify-between">
             <a
               href={`/portal/submission/${s.id}`}
@@ -36,10 +36,10 @@ export function SubmissionCards({
             </span>
           </div>
 
-          <div className="text-sm mt-2">
-            Status:{" "}
-            <RenderStatus status={s.pending} passed={s.passed} />
+          <div className="mt-2 text-sm">
+            Status: <RenderStatus status={s.pending} passed={s.passed} />
           </div>
+          <div className="mt-2 text-sm">Arch: {s.arch}</div>
 
           {isAdmin && (
             <button

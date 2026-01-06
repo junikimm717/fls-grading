@@ -38,7 +38,7 @@ export function ApiKeysList({ keys }: { keys: ApiKeyRow[] }) {
   function handleRevoke(id: string) {
     startTransition(async () => {
       await revokeApiKeyClient(id);
-      // It is generally better to use router.refresh() than a full reload 
+      // It is generally better to use router.refresh() than a full reload
       // if your server component is fetching the keys.
       router.refresh();
       setRevokeTarget(null);
@@ -47,44 +47,42 @@ export function ApiKeysList({ keys }: { keys: ApiKeyRow[] }) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex justify-between items-center">
         <h1 className="text-xl font-semibold">Worker API Keys</h1>
 
         <button
           onClick={() => setIsCreateModalOpen(true)}
-          className="rounded bg-black px-4 py-2 text-white hover:bg-gray-800 transition-colors"
+          className="py-2 px-4 text-white bg-black transition-colors hover:bg-gray-800"
         >
           Create API Key
         </button>
       </div>
 
-      <div className="rounded border">
+      <div className="border">
         <table className="w-full text-sm">
-          <thead className="border-b bg-gray-50">
+          <thead className="bg-gray-50 border-b">
             <tr>
-              <th className="px-3 py-2 text-left">Name</th>
-              <th className="px-3 py-2 text-left">Key</th>
-              <th className="px-3 py-2 text-left">Created</th>
-              <th className="px-3 py-2" />
+              <th className="py-2 px-3 text-left">Name</th>
+              <th className="py-2 px-3 text-left">Key</th>
+              <th className="py-2 px-3 text-left">Created</th>
+              <th className="py-2 px-3" />
             </tr>
           </thead>
           <tbody>
             {keys.map((k) => (
               <tr key={k.id} className="border-b">
-                <td className="px-3 py-2 font-medium">
-                  {k.name || <span className="text-gray-400 italic">No name</span>}
+                <td className="py-2 px-3 font-medium">
+                  {k.name || (
+                    <span className="italic text-gray-400">No name</span>
+                  )}
                 </td>
-                <td className="px-3 py-2 font-mono text-gray-500">
+                <td className="py-2 px-3 font-mono text-gray-500">
                   ak_********
                 </td>
-                <td className="px-3 py-2">
-                  {k.createdAt.toLocaleString()}
-                </td>
-                <td className="px-3 py-2 text-right">
+                <td className="py-2 px-3">{k.createdAt.toLocaleString()}</td>
+                <td className="py-2 px-3 text-right">
                   <button
-                    onClick={() =>
-                      setRevokeTarget({ id: k.id, name: k.name })
-                    }
+                    onClick={() => setRevokeTarget({ id: k.id, name: k.name })}
                     className="text-red-600 hover:underline"
                   >
                     Revoke
@@ -95,10 +93,7 @@ export function ApiKeysList({ keys }: { keys: ApiKeyRow[] }) {
 
             {keys.length === 0 && (
               <tr>
-                <td
-                  colSpan={4}
-                  className="px-3 py-6 text-center text-gray-500"
-                >
+                <td colSpan={4} className="py-6 px-3 text-center text-gray-500">
                   No active worker API keys
                 </td>
               </tr>
@@ -165,8 +160,8 @@ function CreateApiKeyModal({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="w-full max-w-lg rounded bg-white p-6 shadow-xl">
+    <div className="flex fixed inset-0 z-50 justify-center items-center bg-black/40">
+      <div className="p-6 w-full max-w-lg bg-white shadow-xl">
         {!generatedKey ? (
           /* Step 1: Form to enter name */
           <form onSubmit={handleCreate} className="space-y-4">
@@ -178,23 +173,23 @@ function CreateApiKeyModal({ onClose }: { onClose: () => void }) {
                 required
                 type="text"
                 placeholder="e.g. Production Environment"
-                className="w-full rounded border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+                className="py-2 px-3 w-full text-sm border focus:ring-2 focus:ring-black focus:outline-none"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
-            <div className="flex justify-end gap-3 pt-2">
+            <div className="flex gap-3 justify-end pt-2">
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded px-4 py-2 text-sm font-medium hover:bg-gray-100"
+                className="py-2 px-4 text-sm font-medium hover:bg-gray-100"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isCreating}
-                className="rounded bg-black px-4 py-2 text-sm text-white disabled:opacity-50"
+                className="py-2 px-4 text-sm text-white bg-black disabled:opacity-50"
               >
                 {isCreating ? "Creating..." : "Create Key"}
               </button>
@@ -203,27 +198,29 @@ function CreateApiKeyModal({ onClose }: { onClose: () => void }) {
         ) : (
           /* Step 2: Success and Show Key */
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-green-700">Key Created Successfully</h2>
+            <h2 className="text-lg font-semibold text-green-700">
+              Key Created Successfully
+            </h2>
             <p className="text-sm text-red-600">
-              This API key will <strong>never be shown again</strong>. 
-              Copy it now and store it securely.
+              This API key will <strong>never be shown again</strong>. Copy it
+              now and store it securely.
             </p>
 
-            <div className="rounded border bg-gray-50 p-3 font-mono break-all text-sm">
+            <div className="p-3 font-mono text-sm break-all bg-gray-50 border">
               {generatedKey}
             </div>
 
-            <div className="flex items-center justify-between pt-2">
+            <div className="flex justify-between items-center pt-2">
               <button
                 onClick={copy}
-                className="rounded border px-4 py-2 text-sm font-medium hover:bg-gray-50"
+                className="py-2 px-4 text-sm font-medium border hover:bg-gray-50"
               >
                 {copied ? "Copied!" : "Copy to Clipboard"}
               </button>
 
               <button
                 onClick={onClose}
-                className="rounded bg-black px-4 py-2 text-sm text-white"
+                className="py-2 px-4 text-sm text-white bg-black"
               >
                 Done
               </button>

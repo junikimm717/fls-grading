@@ -22,11 +22,12 @@ export function SubmissionTable({
 
   return (
     <>
-      <table className="w-full border rounded">
+      <table className="w-full border">
         <thead className="bg-gray-50 text-left">
           <tr>
             <th className="p-2">ID</th>
             <th className="p-2">Created</th>
+            <th className="p-2">Arch</th>
             <th className="p-2">Status</th>
             {isAdmin && <th className="p-2">Actions</th>}
           </tr>
@@ -44,6 +45,7 @@ export function SubmissionTable({
               </td>
 
               <td className="p-2">{new Date(s.createdAt).toLocaleString()}</td>
+              <td className="p-2">{s.arch}</td>
 
               <td className="p-2">
                 <RenderStatus status={s.pending} passed={s.passed} />
