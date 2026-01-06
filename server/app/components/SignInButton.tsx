@@ -1,12 +1,12 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export default function SignInButton() {
   return (
     <button
-      onClick={() => signIn("google")}
-      className="text-blue-600 hover:text-blue-700 hover:underline text-left w-fit"
+      onClick={() => redirect("/auth/login")}
+      className="text-left text-blue-600 hover:text-blue-700 hover:underline w-fit"
     >
       Log in
     </button>

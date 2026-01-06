@@ -15,6 +15,7 @@ export const usersTable = sqliteTable("user", {
   name: text("name"),
   email: text().notNull().unique(),
   emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
+  lastRequested: integer("lastRequested", { mode: "timestamp_ms" }),
   image: text("image"),
 
   passed: int(),
@@ -88,3 +89,13 @@ export const accountsTable = sqliteTable(
     }),
   ],
 );
+
+export const magicLinkTable = sqliteTable("magic_link", {
+  tokenHash: text("token_hash").primaryKey(),
+  email: text("email").notNull(),
+  expiresAt: integer("expires_at", { mode: "timestamp_ms" }).notNull(),
+  usedAt: integer("used_at", { mode: "timestamp_ms" }),
+  createdAt: integer("created_at", { mode: "timestamp_ms" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+});
