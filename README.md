@@ -9,11 +9,11 @@ stateless workers that will grade incoming student submissions and report
 results, and container images used to build student OS images and execute
 grading logic against those images.
 
-Students will access the portal via their MIT Email (routed through Google
-OAuth) and upload their submissions to the graders. The workers, who access
-the webapp's protected endpoints via access tokens, will then pick up the
-submission and, once grading is completed, will return the result to the webapp
-for the students to view in the portal.
+Students will access the portal via their MIT Email (which they will log onto
+via magic link auth) and upload their submissions to the graders. The workers,
+who access the webapp's protected endpoints via access tokens, will then pick up
+the submission and, once grading is completed, will return the result to the
+webapp for the students to view in the portal.
 
 Admins have access to their own portal, from which they can manage users, adjust
 permissions, and override grades when necessary. One special user, defined in

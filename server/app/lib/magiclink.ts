@@ -42,24 +42,25 @@ If you did not request this email, you can ignore it.`,
 }
 
 async function allowUserLogin(email: string) {
-  if (email === DICTATOR) {
-    return true;
-  }
   const [user] = await db
     .select()
     .from(usersTable)
     .where(eq(usersTable.email, email))
     .limit(1);
-  if (!user) {
+
+  // Non-dictator must already exist
+  if (!user && email !== DICTATOR) {
     return false;
   }
-  // user should wait (prevent rate limiting bullshit).
+
+  // Rate limit applies whenever a row exists
   if (
-    user.lastRequested &&
+    user?.lastRequested &&
     Date.now() < user.lastRequested.getTime() + RESEND_MS
   ) {
     return false;
   }
+
   return true;
 }
 
