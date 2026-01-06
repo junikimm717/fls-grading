@@ -275,7 +275,13 @@ class DockerClient:
 
         container = self.client.containers.run(
             image=FLS_GRADING_GRADER,
-            command=["/grade.py", "/dist/bootable.img"],
+            command=[
+                "timeout",
+                "--signal=KILL",
+                "3m",
+                "/grade.py",
+                "/dist/bootable.img",
+            ],
             remove=True,
             detach=True,
             tty=True,
@@ -286,6 +292,11 @@ class DockerClient:
                     "mode": "rw",
                 }
             },
+            # qemu can only use 1024mb here anw which should be overkill.
+            mem_limit="2g",
+            memswap_limit="2g",
+            nano_cpus=usable_cpus * 1_000_000_000,
+            pids_limit=256,
         )
 
         try:
