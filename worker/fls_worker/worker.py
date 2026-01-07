@@ -1,22 +1,20 @@
 #!/usr/bin/env python3
 import logging
 import shutil
+import signal
 import tarfile
+import threading
 import traceback
 import uuid
+from multiprocessing import Process
 from pathlib import Path
 
 from .apiclient import FLSClient
 from .arch import detect_arch
 from .config import FLS_MOUNT_PREFIX
 from .dockerclient import DockerClient
-from .errors import (
-    FLSAPIError,
-    FLSAlreadyClaimedError,
-    FLSAuthError,
-    FLSBadResponseError,
-    FLSNotFoundError,
-)
+from .errors import FLSAlreadyClaimedError, FLSAPIError
+from .infraerrors import INFRA_EXCEPTIONS
 from .models import Arch
 
 # ------------------------------------------------------------
@@ -29,6 +27,27 @@ logging.basicConfig(
 )
 
 log = logging.getLogger("fls-grade")
+
+# ------------------------------------------------------------
+# heartbeat
+# ------------------------------------------------------------
+
+
+def grading_heartbeat(interval=20):
+    api = FLSClient()
+    stop = threading.Event()
+
+    def _sigterm(_signo, _frame):
+        stop.set()
+
+    signal.signal(signal.SIGTERM, _sigterm)
+
+    while not stop.is_set():
+        try:
+            api.grading_heartbeat()
+        except Exception:
+            pass
+        stop.wait(interval)
 
 
 # ------------------------------------------------------------
@@ -136,6 +155,12 @@ def run_once() -> None:
 
     log_path = base_dir / "logs.txt"
 
+    hb_proc = Process(
+        target=grading_heartbeat,
+        daemon=True,
+    )
+
+    hb_proc.start()
 
     try:
         tar_path = tar_dir / "submission.tar"
@@ -182,9 +207,9 @@ def run_once() -> None:
             log_path=log_path,
         )
 
-    except (FLSAPIError, FLSAuthError, FLSBadResponseError, FLSNotFoundError):
+    except INFRA_EXCEPTIONS as e:
         # infra error → cancel immediately
-        log.exception("infrastructure error; cancelling submission")
+        log.exception(f"infrastructure error; cancelling submission...{e}")
         try:
             client.cancel_submission(submission)
         except Exception:
@@ -208,6 +233,8 @@ def run_once() -> None:
             log.exception("failed to submit failure result")
 
     finally:
+        hb_proc.terminate()
+        hb_proc.join(timeout=2)
         # best-effort cleanup
         try:
             shutil.rmtree(base_dir)

@@ -183,16 +183,13 @@ export default async function NewSubmissionPage() {
       : "x86_64";
 
   return (
-    <div className="py-6 px-4 mx-auto space-y-6 max-w-xl">
+    <div className="py-6 px-4 mx-auto space-y-6 max-w-5xl">
       <div className="p-4 bg-white border">
         <div className="text-sm text-gray-600">Submitting as</div>
         <div className="font-mono">{user.email}</div>
       </div>
 
-      <form
-        action={createSubmission}
-        className="p-4 space-y-4 bg-white border"
-      >
+      <form action={createSubmission} className="p-4 space-y-4 bg-white border">
         <div>
           <label className="block mb-1 text-sm font-medium">
             Tarball (.tar.gz, max 5MB)

@@ -14,7 +14,7 @@ export async function GET(req: Request) {
   }
   await db
     .update(apiKeyTable)
-    .set({ pingedAt: Date.now() })
+    .set({ pingedAt: Date.now(), isGrading: 0 })
     .where(eq(apiKeyTable.id, auth.key.keyId));
 
   // we need to consume the worker

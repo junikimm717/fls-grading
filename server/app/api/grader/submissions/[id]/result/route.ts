@@ -1,5 +1,5 @@
 import { db } from "@/app/db";
-import { submissionTable } from "@/app/db/schema";
+import { apiKeyTable, submissionTable } from "@/app/db/schema";
 import { SubmissionStatus } from "@/app/db/types";
 import { eq, and } from "drizzle-orm";
 import fs from "fs/promises";
@@ -15,6 +15,9 @@ export async function POST(
   const auth = await requireAdmin(req);
   if (!auth.ok) {
     return new Response("Unauthorized", { status: auth.status });
+  }
+  if (!auth.key) {
+    return new Response("Impossible", { status: 500 });
   }
 
   const form = await req.formData();
@@ -54,6 +57,11 @@ export async function POST(
       logs: logName,
     })
     .where(eq(submissionTable.id, Number(submissionId)));
+
+  await db
+    .update(apiKeyTable)
+    .set({ pingedAt: Date.now(), isGrading: 0 })
+    .where(eq(apiKeyTable.id, auth.key.keyId));
 
   return new Response("ok");
 }

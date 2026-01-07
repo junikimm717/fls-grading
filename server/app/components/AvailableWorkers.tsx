@@ -11,6 +11,7 @@ export async function AvailableWorkers() {
     .select({
       id: apiKeyTable.id,
       name: apiKeyTable.name,
+      isGrading: apiKeyTable.isGrading,
     })
     .from(apiKeyTable)
     .where(
@@ -34,10 +35,17 @@ export async function AvailableWorkers() {
               key={key.id}
             >
               {key.name || "Unnamed"}
-              <span className="flex gap-1 items-center text-green-600">
-                <LoadingSpinner className="w-3 h-3" />
-                Alive
-              </span>
+              {key.isGrading ? (
+                <span className="flex gap-1 items-center text-yellow-500">
+                  <LoadingSpinner className="w-3 h-3" />
+                  Grading
+                </span>
+              ) : (
+                <span className="flex gap-1 items-center text-green-600">
+                  <LoadingSpinner className="w-3 h-3" />
+                  Available
+                </span>
+              )}
             </span>
           ))}
         </div>

@@ -66,6 +66,15 @@ class FLSClient:
     # public API
     # -----------------------------
 
+    def grading_heartbeat(self):
+        """
+        GET /api/grader/grading
+        """
+        try:
+            self._get("/api/grader/grading")
+        except:
+            pass
+
     def list_submissions(self, arch: Arch) -> list[Submission]:
         """
         GET /api/grader/submissions?arch=...
