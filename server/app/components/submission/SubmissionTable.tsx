@@ -6,6 +6,7 @@ import { SubmissionRow } from "./types";
 import { ConfirmActionModal } from "@/app/components/ConfirmActionModal";
 import { gradeSubmissionClient } from "@/app/lib/users-client";
 import RenderStatus from "./RenderStatus";
+import Link from "next/link";
 
 export function SubmissionTable({
   submissions,
@@ -23,28 +24,39 @@ export function SubmissionTable({
   return (
     <>
       <table className="w-full border">
-        <thead className="text-left bg-gray-50">
+        <thead className="text-left bg-gray-50 border">
           <tr>
             <th className="p-2">ID</th>
-            <th className="p-2">Created</th>
+            <th className="p-2">User</th>
             <th className="p-2">Arch</th>
             <th className="p-2">Status</th>
-            {isAdmin && <th className="p-2">Actions</th>}
+            {isAdmin && <th className="p-2" />}
           </tr>
         </thead>
         <tbody>
           {submissions.map((s) => (
-            <tr key={s.id} className="border-t">
+            <tr key={s.id}>
               <td className="p-2">
-                <a
+                <Link
                   href={`/portal/submission/${s.id}`}
                   className="text-blue-600 underline"
                 >
                   #{s.id}
-                </a>
+                </Link>
               </td>
 
-              <td className="p-2">{new Date(s.createdAt).toLocaleString()}</td>
+              <td
+                className="p-2 font-mono max-w-[8rem] truncate"
+                title={s.userEmail}
+              >
+                {isAdmin ? (
+                  <Link className="underline" href={`/admin/users/${s.userId}`}>
+                    {s.userEmail}
+                  </Link>
+                ) : (
+                  <>{s.userEmail}</>
+                )}
+              </td>
               <td className="p-2">{s.arch}</td>
 
               <td className="p-2">

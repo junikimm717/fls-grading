@@ -4,6 +4,7 @@ export type SubmissionRow = {
   passed: number | null;
   pending: number;
   arch: string
+  email: string
 };
 
 export type SubmissionView = {

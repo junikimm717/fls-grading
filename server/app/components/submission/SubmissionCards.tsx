@@ -6,6 +6,7 @@ import { useState } from "react";
 import { ConfirmActionModal } from "@/app/components/ConfirmActionModal";
 import { gradeSubmissionClient } from "@/app/lib/users-client";
 import RenderStatus from "./RenderStatus";
+import Link from "next/link";
 
 export function SubmissionCards({
   submissions,
@@ -35,11 +36,26 @@ export function SubmissionCards({
               {new Date(s.createdAt).toLocaleDateString()}
             </span>
           </div>
+          <div className="mt-2 text-sm">
+            <strong>Creator:</strong>
+            <span className="p-2 font-mono max-w-[8rem] truncate" title={s.userEmail}>
+              {isAdmin ? (
+                <Link className="underline" href={`/admin/users/${s.userId}`}>
+                  {s.userEmail}
+                </Link>
+              ) : (
+                <>{s.userEmail}</>
+              )}
+            </span>
+          </div>
 
           <div className="mt-2 text-sm">
-            Status: <RenderStatus status={s.pending} passed={s.passed} />
+            <strong>Status:</strong>{" "}
+            <RenderStatus status={s.pending} passed={s.passed} />
           </div>
-          <div className="mt-2 text-sm">Arch: {s.arch}</div>
+          <div className="mt-2 text-sm">
+            <strong>Architecture:</strong> {s.arch}
+          </div>
 
           {isAdmin && (
             <div className="mt-2 text-sm">

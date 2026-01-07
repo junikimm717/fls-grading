@@ -21,14 +21,14 @@ export function UsersTableRow({
   onDeleteAction,
 }: Props) {
   return (
-    <tr className="hover:bg-gray-50">
-      <td className="border px-3 py-2 font-mono truncate">
+    <tr>
+      <td className="py-2 px-3 font-mono truncate">
         <Link className="underline" href={`/admin/users/${user.id}`}>
           {user.email}
         </Link>
       </td>
 
-      <td className="border px-3 py-2 text-center">
+      <td className="py-2 px-3 text-center">
         <button
           disabled={disabled}
           className="underline"
@@ -38,7 +38,7 @@ export function UsersTableRow({
         </button>
       </td>
 
-      <td className="border px-3 py-2 text-center">
+      <td className="py-2 px-3 text-center">
         <button
           disabled={disabled}
           className="underline"
@@ -48,7 +48,7 @@ export function UsersTableRow({
         </button>
       </td>
 
-      <td className="border px-3 py-2 text-center">
+      <td className="py-2 px-3 text-center">
         {!isSelf && (
           <button className="text-red-600 underline" onClick={onDeleteAction}>
             Delete

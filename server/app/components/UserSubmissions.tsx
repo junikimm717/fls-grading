@@ -1,5 +1,5 @@
 import { db } from "@/app/db";
-import { submissionTable } from "@/app/db/schema";
+import { submissionTable, usersTable } from "@/app/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { isAdminQuery } from "@/app/lib/is-admin";
 import { SubmissionListClient } from "./submission/SubmissionListClient";
@@ -16,8 +16,11 @@ export async function UserSubmissions({ userId }: Props) {
       passed: submissionTable.passed,
       pending: submissionTable.pending,
       arch: submissionTable.arch,
+      userEmail: usersTable.email,
+      userId: usersTable.id,
     })
     .from(submissionTable)
+    .innerJoin(usersTable, eq(usersTable.id, submissionTable.userId))
     .where(eq(submissionTable.userId, userId))
     .orderBy(desc(submissionTable.createdAt));
 

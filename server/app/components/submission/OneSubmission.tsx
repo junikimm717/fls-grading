@@ -20,14 +20,21 @@ export async function OneSubmission({
         </span>
       </div>
 
-      {isAdmin && (
-        <div className="text-sm">
-          <strong>Creator:</strong>{" "}
-          <Link className="underline" href={`/admin?email=${user.email}`}>
-            {user.email}
-          </Link>
-        </div>
-      )}
+      <div className="text-sm">
+        <strong>Creator:</strong>
+        <span
+          className="p-2 font-mono max-w-[8rem] truncate"
+          title={user.email}
+        >
+          {isAdmin ? (
+            <Link className="underline" href={`/admin/users/${user.id}`}>
+              {user.email}
+            </Link>
+          ) : (
+            <>{user.email}</>
+          )}
+        </span>
+      </div>
 
       <div className="text-sm">
         <strong>Architecture:</strong> {submission.arch}

@@ -59,7 +59,7 @@ export function ApiKeysList({ keys }: { keys: ApiKeyRow[] }) {
       </div>
 
       <div className="border">
-        <table className="w-full text-sm">
+        <table className="w-full">
           <thead className="bg-gray-50 border-b">
             <tr>
               <th className="py-2 px-3 text-left">Name</th>
@@ -70,7 +70,7 @@ export function ApiKeysList({ keys }: { keys: ApiKeyRow[] }) {
           </thead>
           <tbody>
             {keys.map((k) => (
-              <tr key={k.id} className="border-b">
+              <tr key={k.id}>
                 <td className="py-2 px-3 font-medium">
                   {k.name || (
                     <span className="italic text-gray-400">No name</span>
@@ -161,7 +161,7 @@ function CreateApiKeyModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="flex fixed inset-0 z-50 justify-center items-center bg-black/40">
-      <div className="p-6 w-full max-w-lg bg-white shadow-xl">
+      <div className="p-6 w-full max-w-lg bg-white">
         {!generatedKey ? (
           /* Step 1: Form to enter name */
           <form onSubmit={handleCreate} className="space-y-4">
@@ -173,7 +173,7 @@ function CreateApiKeyModal({ onClose }: { onClose: () => void }) {
                 required
                 type="text"
                 placeholder="e.g. Production Environment"
-                className="py-2 px-3 w-full text-sm border focus:ring-2 focus:ring-black focus:outline-none"
+                className="py-2 px-3 w-full text-sm border focus:outline-none"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
@@ -189,7 +189,7 @@ function CreateApiKeyModal({ onClose }: { onClose: () => void }) {
               <button
                 type="submit"
                 disabled={isCreating}
-                className="py-2 px-4 text-sm text-white bg-black disabled:opacity-50"
+                className="py-2 px-4 text-sm text-white bg-black hover:bg-gray-800 disabled:opacity-50"
               >
                 {isCreating ? "Creating..." : "Create Key"}
               </button>
