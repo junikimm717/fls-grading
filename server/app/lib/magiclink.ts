@@ -10,7 +10,7 @@ import { signIn } from "@/app/lib/auth";
 import { redirect } from "next/navigation";
 import { ResultWithReason } from "../db/types";
 
-const EXPIRY_MS = 10 * 60 * 1000; // 10 minutes
+const EXPIRY_MS = 15 * 60 * 1000; // 15 minutes
 const RESEND_MS = 2 * 60 * 1000; // 2 minutes
 
 export async function hashToken(token: string) {
@@ -36,7 +36,7 @@ export async function sendEmail(to: string, url: string) {
 
 ${url}
 
-This link expires in 10 minutes.
+This link expires in 15 minutes.
 
 If you did not request this email, you can ignore it.`,
   });

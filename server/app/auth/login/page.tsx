@@ -14,10 +14,16 @@ export default function LoginPage() {
 
       <div className="p-4 max-w-sm border">
         {sent ? (
-          <p className="text-sm">
-            A sign-in link has been sent to{" "}
-            <span className="font-mono">{email}</span>.
-          </p>
+          <div className="text-sm">
+            <p>
+              A sign-in link has been sent to{" "}
+              <span className="font-mono">{email}</span>.{" "}
+            </p>
+            <p className="mt-3 text-xs text-gray-600">
+              Note it may take some time for the email to pass through
+              MIT&rsquo;s email filters.
+            </p>
+          </div>
         ) : (
           <form
             onSubmit={async (e) => {
