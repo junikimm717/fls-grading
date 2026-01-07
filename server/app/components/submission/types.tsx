@@ -3,8 +3,9 @@ export type SubmissionRow = {
   createdAt: Date;
   passed: number | null;
   pending: number;
-  arch: string
-  email: string
+  arch: string;
+  userEmail: string;
+  userId: string;
 };
 
 export type SubmissionView = {
