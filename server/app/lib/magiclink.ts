@@ -8,6 +8,7 @@ import { eq, and, isNull } from "drizzle-orm";
 import { DICTATOR, SES_SMTP_HOST, SES_SMTP_PASS, SES_SMTP_USER } from "./env";
 import { signIn } from "@/app/lib/auth";
 import { redirect } from "next/navigation";
+import { ResultWithReason } from "../db/types";
 
 const EXPIRY_MS = 10 * 60 * 1000; // 10 minutes
 const RESEND_MS = 2 * 60 * 1000; // 2 minutes
@@ -41,7 +42,7 @@ If you did not request this email, you can ignore it.`,
   });
 }
 
-async function allowUserLogin(email: string) {
+async function allowUserLogin(email: string): Promise<ResultWithReason> {
   const [user] = await db
     .select()
     .from(usersTable)
@@ -50,7 +51,10 @@ async function allowUserLogin(email: string) {
 
   // Non-dictator must already exist
   if (!user && email !== DICTATOR) {
-    return false;
+    return {
+      ok: false,
+      reason: "Please ask staff to create an account for you.",
+    };
   }
 
   // Rate limit applies whenever a row exists
@@ -58,17 +62,23 @@ async function allowUserLogin(email: string) {
     user?.lastRequested &&
     Date.now() < user.lastRequested.getTime() + RESEND_MS
   ) {
-    return false;
+    return {
+      ok: false,
+      reason: "You have been rate limited. Please try sending the code later.",
+    };
   }
 
-  return true;
+  return { ok: true };
 }
 
-export async function requestMagicLink(email: string) {
+export async function requestMagicLink(
+  email: string,
+): Promise<ResultWithReason> {
   email = email.trim().toLowerCase();
 
-  if (!(await allowUserLogin(email))) {
-    return { ok: false };
+  const login = await allowUserLogin(email);
+  if (!login.ok) {
+    return login;
   }
 
   const rawToken = crypto.randomBytes(32).toString("hex");
@@ -86,7 +96,11 @@ export async function requestMagicLink(email: string) {
 
   const url = `${process.env.NEXTAUTH_URL}/auth/magic/verify?token=${rawToken}`;
 
-  await sendEmail(email, url);
+  try {
+    await sendEmail(email, url);
+  } catch (e) {
+    return { ok: false, reason: (e as Error).message };
+  }
 
   return { ok: true };
 }
@@ -145,5 +159,5 @@ export async function confirmMagicLink(formData: FormData) {
     redirect: false,
   });
 
-  redirect("/");
+  redirect("/portal");
 }

@@ -6,7 +6,7 @@ import { requestMagicLink } from "@/app/lib/magiclink";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<string>();
 
   return (
     <div className="mx-auto space-y-6 max-w-2xl">
@@ -22,13 +22,13 @@ export default function LoginPage() {
           <form
             onSubmit={async (e) => {
               e.preventDefault();
-              setError(false);
+              setError(undefined);
 
               const res = await requestMagicLink(email);
               if (res.ok) {
                 setSent(true);
               } else {
-                setError(true);
+                setError(res.reason);
               }
             }}
           >
@@ -51,7 +51,7 @@ export default function LoginPage() {
 
             {error && (
               <p className="mt-2 text-sm text-red-700">
-                Unable to send sign-in link.
+                Unable to send sign-in link. {error}
               </p>
             )}
           </form>

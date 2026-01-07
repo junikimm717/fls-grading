@@ -3,3 +3,4 @@ export enum SubmissionStatus {
   GRADING = 1,
   COMPLETED = 2,
 }
+export type ResultWithReason = { ok: boolean; reason?: string };
