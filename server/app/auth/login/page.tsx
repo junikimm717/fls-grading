@@ -17,11 +17,18 @@ export default function LoginPage() {
           <div className="text-sm">
             <p>
               A sign-in link has been sent to{" "}
-              <span className="font-mono">{email}</span>.{" "}
+              <span className="font-mono">{email}</span>.
             </p>
+
             <p className="mt-3 text-xs text-gray-600">
-              Note it may take some time for the email to pass through
-              MIT&rsquo;s email filters.
+              Delivery to <code>@mit.edu</code> addresses may take a few
+              minutes. Please check your <strong>Spam / Junk</strong> folder if
+              you don&rsquo;t see the email.
+            </p>
+
+            <p className="mt-2 text-xs text-gray-600">
+              The email is sent from{" "}
+              <span className="font-mono">no-reply@mit.junic.kim</span>.
             </p>
           </div>
         ) : (
@@ -54,6 +61,10 @@ export default function LoginPage() {
                 Send sign-in link
               </button>
             </div>
+
+            <p className="mt-2 text-xs text-gray-500">
+              Automated emails to MIT addresses may be filtered or delayed.
+            </p>
 
             {error && (
               <p className="mt-2 text-sm text-red-700">
