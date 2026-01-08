@@ -5,7 +5,7 @@ import nodemailer from "nodemailer";
 import { db } from "@/app/db";
 import { magicLinkTable, usersTable } from "@/app/db/schema";
 import { eq, and, isNull } from "drizzle-orm";
-import { DICTATOR, SES_SMTP_HOST, SES_SMTP_PASS, SES_SMTP_USER } from "./env";
+import { DICTATOR, SES_SMTP_EMAIL, SES_SMTP_HOST, SES_SMTP_PASS, SES_SMTP_USER } from "./env";
 import { signIn } from "@/app/lib/auth";
 import { redirect } from "next/navigation";
 import { ResultWithReason } from "../db/types";
@@ -29,7 +29,7 @@ const transporter = nodemailer.createTransport({
 
 export async function sendEmail(to: string, url: string) {
   await transporter.sendMail({
-    from: "6.S913 <no-reply@mit.junic.kim>",
+    from: `6.S913 <${SES_SMTP_EMAIL}>`,
     to,
     subject: "6.S913 Sign-in Link",
     text: `Sign in to the MIT 6.S913 submission portal:
