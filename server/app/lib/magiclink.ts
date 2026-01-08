@@ -35,11 +35,20 @@ const transporter = nodemailer.createTransport({
 
 export async function sendEmail(to: string, url: string) {
   await transporter.sendMail({
-    from: `6.S913 Course Staff <${SES_SMTP_EMAIL}>`,
+    from: `MIT 6.S913 Course Staff <${SES_SMTP_EMAIL}>`,
     replyTo: "junickim@mit.edu",
     to,
-    subject: "6.S913: Sign-in link for the submission portal",
-    text: `You requested a sign-in link for the MIT 6.S913 Fundamentals of Linux Systems submission portal.
+
+    subject: "6.S913 submission portal login (requested)",
+
+    headers: {
+      "List-Id": "<mit-6s913-course-list>",
+    },
+
+    text: `This email was sent by the MIT 6.S913 course staff.
+
+You requested a login link for the 6.S913 Fundamentals of Linux Systems
+submission portal.
 
 To continue, open the link below in your browser:
 
@@ -49,6 +58,7 @@ This link will expire in 15 minutes and can be used only once.
 
 If you did not request this email, you can safely ignore it.
 
+---
 MIT 6.S913 Course Staff
 Fundamentals of Linux Systems
 For questions, contact the course staff or reply to this email.
