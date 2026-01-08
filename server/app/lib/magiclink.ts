@@ -5,7 +5,13 @@ import nodemailer from "nodemailer";
 import { db } from "@/app/db";
 import { magicLinkTable, usersTable } from "@/app/db/schema";
 import { eq, and, isNull } from "drizzle-orm";
-import { DICTATOR, SES_SMTP_EMAIL, SES_SMTP_HOST, SES_SMTP_PASS, SES_SMTP_USER } from "./env";
+import {
+  DICTATOR,
+  SES_SMTP_EMAIL,
+  SES_SMTP_HOST,
+  SES_SMTP_PASS,
+  SES_SMTP_USER,
+} from "./env";
 import { signIn } from "@/app/lib/auth";
 import { redirect } from "next/navigation";
 import { ResultWithReason } from "../db/types";
@@ -29,16 +35,24 @@ const transporter = nodemailer.createTransport({
 
 export async function sendEmail(to: string, url: string) {
   await transporter.sendMail({
-    from: `6.S913 <${SES_SMTP_EMAIL}>`,
+    from: `6.S913 Course Staff <${SES_SMTP_EMAIL}>`,
+    replyTo: "junickim@mit.edu",
     to,
-    subject: "6.S913 Sign-in Link",
-    text: `Sign in to the MIT 6.S913 submission portal:
+    subject: "6.S913: Sign-in link for the submission portal",
+    text: `You requested a sign-in link for the MIT 6.S913 Fundamentals of Linux Systems submission portal.
+
+To continue, open the link below in your browser:
 
 ${url}
 
-This link expires in 15 minutes.
+This link will expire in 15 minutes and can be used only once.
 
-If you did not request this email, you can ignore it.`,
+If you did not request this email, you can safely ignore it.
+
+MIT 6.S913 Course Staff
+Fundamentals of Linux Systems
+For questions, contact the course staff or reply to this email.
+`,
   });
 }
 

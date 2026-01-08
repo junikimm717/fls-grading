@@ -21,9 +21,10 @@ export default function LoginPage() {
             </p>
 
             <p className="mt-3 text-xs text-gray-600">
-              Delivery to <code>@mit.edu</code> addresses may take a few
-              minutes. Please check your <strong>Spam / Junk</strong> folder if
-              you don&rsquo;t see the email.
+              Delivery to <code>@mit.edu</code> addresses may take a few minutes
+              and may be filtered into <strong>Spam / Junk</strong>. Some mobile
+              email apps (including Outlook) may not immediately refresh Junk
+              folders.
             </p>
 
             <p className="mt-2 text-xs text-gray-600">
