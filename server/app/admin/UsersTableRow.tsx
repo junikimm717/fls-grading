@@ -21,7 +21,7 @@ export function UsersTableRow({
   onDeleteAction,
 }: Props) {
   return (
-    <tr>
+    <tr className="border-t">
       <td className="py-2 px-3 font-mono truncate">
         <Link className="underline" href={`/admin/users/${user.id}`}>
           {user.email}

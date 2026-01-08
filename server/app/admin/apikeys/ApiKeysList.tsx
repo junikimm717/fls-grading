@@ -70,7 +70,7 @@ export function ApiKeysList({ keys }: { keys: ApiKeyRow[] }) {
           </thead>
           <tbody>
             {keys.map((k) => (
-              <tr key={k.id}>
+              <tr key={k.id} className="border-t">
                 <td className="py-2 px-3 font-medium">
                   {k.name || (
                     <span className="italic text-gray-400">No name</span>

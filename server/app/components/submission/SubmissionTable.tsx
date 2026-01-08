@@ -35,7 +35,7 @@ export function SubmissionTable({
         </thead>
         <tbody>
           {submissions.map((s) => (
-            <tr key={s.id}>
+            <tr key={s.id} className="border-t">
               <td className="p-2">
                 <Link
                   href={`/portal/submission/${s.id}`}
