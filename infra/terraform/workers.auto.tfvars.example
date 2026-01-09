@@ -1,0 +1,11 @@
+x86_worker_names = ["w1", "w2"]
+arm_worker_names = ["a1"]
+
+x86_workers = {
+  w1 = "APIKEY_X86_1"
+  w2 = "APIKEY_X86_2"
+}
+
+arm_workers = {
+  a1 = "APIKEY_ARM_1"
+}
