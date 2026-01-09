@@ -4,9 +4,9 @@ import { submissionTable, usersTable } from "@/app/db/schema";
 import { auth } from "@/app/lib/auth";
 import { isAdminQuery } from "@/app/lib/is-admin";
 import { and, eq } from "drizzle-orm";
-import { forbidden, notFound } from "next/navigation";
+import { notFound } from "next/navigation";
 
-export default async function SubmissionPage({
+export default async function PortalSubmissionPage({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -19,7 +19,7 @@ export default async function SubmissionPage({
   const isAdmin = await isAdminQuery();
 
   if (!session?.user?.id) {
-    forbidden();
+    notFound();
   }
 
   // note that session!.user!.id! is protected by the routes above.
@@ -40,7 +40,7 @@ export default async function SubmissionPage({
   const isOwner = submission.user.id === session.user.id;
 
   if (!isAdmin && !isOwner) {
-    return new Response("Forbidden", { status: 403 });
+    notFound();
   }
 
   return <OneSubmission submission={submission} />;
