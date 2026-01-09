@@ -187,6 +187,8 @@ class DockerClient:
             memswap_limit="8g",
             nano_cpus=usable_cpus * 1_000_000_000,
             pids_limit=512,
+            security_opt=["no-new-privileges"],
+            cap_drop=["SYS_PTRACE", "SYS_ADMIN"],
         )
 
         try:

@@ -9,6 +9,9 @@ stateless workers that will grade incoming student submissions and report
 results, and container images used to build student OS images and execute
 grading logic against those images.
 
+Terraform infrastructure was also built out to facilitate rapid deployment of
+the grading fleet as needed.
+
 Students will access the portal via their MIT Email (which they will log onto
 via magic link auth) and upload their submissions to the graders. The workers,
 who access the webapp's protected endpoints via access tokens, will then pick up
@@ -30,8 +33,8 @@ projects in this repository require a working docker installation.
 
 We use docker containers to grade student submissions. The images can be found
 in the `./images` directory. The builder and grader containers are designed to
-mitigate the effects of potentially hostile code, including limiting resource
-usage and mounting all writable filesystems as tmpfs.
+mitigate the effects of potentially hostile code, including blocking all network
+access, limiting resource usage, and mounting all writable filesystems as tmpfs.
 
 ## Responsible Disclosure
 

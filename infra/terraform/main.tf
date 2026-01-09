@@ -108,11 +108,11 @@ locals {
   architectures = {
     x86 = {
       ami_id        = data.aws_ami.x86.id
-      instance_type = "c6a.large"
+      instance_type = "c6a.xlarge"
     }
     arm = {
       ami_id        = data.aws_ami.arm.id
-      instance_type = "c7g.large"
+      instance_type = "c7g.xlarge"
     }
   }
 
@@ -142,6 +142,11 @@ resource "aws_launch_template" "grader" {
   iam_instance_profile {
     name = aws_iam_instance_profile.grader.name
   }
+  metadata_options {
+    http_tokens   = "required"
+    http_endpoint = "enabled"
+    http_put_response_hop_limit = 2 
+  }
 
   vpc_security_group_ids = [aws_security_group.grader.id]
 }
@@ -159,6 +164,12 @@ resource "aws_instance" "worker" {
 
   iam_instance_profile = aws_iam_instance_profile.grader.name
   vpc_security_group_ids = [aws_security_group.grader.id]
+
+  metadata_options {
+    http_tokens   = "required"
+    http_endpoint = "enabled"
+    http_put_response_hop_limit = 2 
+  }
 
   user_data = <<EOF
 #!/bin/bash

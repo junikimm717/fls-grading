@@ -194,6 +194,8 @@ def run_once() -> None:
             docker.run_grader(bootable_img=bootable)
             passed = True
 
+        except INFRA_EXCEPTIONS as e:
+            raise
         except Exception as e:
             # student fault: build or runtime failure
             log.exception("grading failed for submission %s", submission.id)
