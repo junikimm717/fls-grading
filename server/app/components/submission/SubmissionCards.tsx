@@ -26,12 +26,12 @@ export function SubmissionCards({
       {submissions.map((s) => (
         <div key={s.id} className="p-3 bg-white border">
           <div className="flex justify-between">
-            <a
+            <Link
               href={`/portal/submission/${s.id}`}
               className="font-mono text-blue-600 underline"
             >
               #{s.id}
-            </a>
+            </Link>
             <span className="text-sm">
               {new Date(s.createdAt).toLocaleDateString()}
             </span>
