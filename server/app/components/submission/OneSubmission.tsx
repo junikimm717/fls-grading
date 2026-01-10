@@ -48,18 +48,18 @@ export async function OneSubmission({
       {showUserActions && (
         <div className="flex gap-4 pt-2 text-sm">
           {submission.tarball && (
-            <a
+            <Link
               href={`/submission/${submission.id}/tarball`}
               className="underline"
             >
               Download tarball
-            </a>
+            </Link>
           )}
 
           {submission.logs && (
-            <a href={`/submission/${submission.id}/logs`} className="underline">
+            <Link href={`/submission/${submission.id}/logs`} className="underline">
               Download logs
-            </a>
+            </Link>
           )}
         </div>
       )}

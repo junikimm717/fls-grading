@@ -47,6 +47,22 @@ export default async function HomePage({
         </a>
       </p>
 
+      <p className="text-gray-700">
+        To get started on the assignment, please clone the GitHub repository
+        available below:
+      </p>
+
+      <p>
+        <a
+          href="https://github.com/junikimm717/fls-assignment-public"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 hover:text-blue-800 underline underline-offset-4"
+        >
+          https://github.com/junikimm717/fls-assignment-public
+        </a>
+      </p>
+
       <hr className="border-gray-200" />
 
       <p className="text-sm text-gray-600">
