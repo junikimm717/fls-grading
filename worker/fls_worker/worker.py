@@ -78,12 +78,12 @@ def safe_extract_tar(tar_path: Path, dest: Path) -> None:
 
             # no absolute paths
             if name.startswith("/") or name.startswith("\\"):
-                raise RuntimeError(f"absolute path in tar: {name}")
+                raise Exception(f"absolute path in tar: {name}")
 
             # no path traversal
             target = (dest / name).resolve()
             if not target.is_relative_to(dest):
-                raise RuntimeError(f"path traversal in tar: {name}")
+                raise Exception(f"path traversal in tar: {name}")
 
             # directories
             if member.isdir():
@@ -94,13 +94,13 @@ def safe_extract_tar(tar_path: Path, dest: Path) -> None:
             # regular files ONLY (no links)
             if member.isreg():
                 if member.linkname:
-                    raise RuntimeError(f"hardlink disallowed: {name}")
+                    raise Exception(f"hardlink disallowed: {name}")
 
                 target.parent.mkdir(parents=True, exist_ok=True)
 
                 src = tar.extractfile(member)
                 if src is None:
-                    raise RuntimeError(f"failed to extract file: {name}")
+                    raise Exception(f"failed to extract file: {name}")
 
                 with src, open(target, "wb") as dst:
                     dst.write(src.read())
