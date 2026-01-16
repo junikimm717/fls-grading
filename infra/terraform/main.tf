@@ -108,11 +108,11 @@ locals {
   architectures = {
     x86 = {
       ami_id        = data.aws_ami.x86.id
-      instance_type = "c6a.xlarge"
+      instance_type = "c6a.2xlarge"
     }
     arm = {
       ami_id        = data.aws_ami.arm.id
-      instance_type = "c7g.xlarge"
+      instance_type = "c7g.2xlarge"
     }
   }
 

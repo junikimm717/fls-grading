@@ -16,7 +16,11 @@ export async function OneSubmission({
       <div className="flex justify-between">
         Submission ID #{submission.id}
         <span className="text-sm text-gray-600">
-          {new Date(submission.createdAt).toLocaleString()}
+          {new Intl.DateTimeFormat("en-US", {
+            timeZone: "America/New_York",
+            dateStyle: "medium",
+            timeStyle: "short",
+          }).format(new Date(submission.createdAt))} ET
         </span>
       </div>
 
@@ -57,7 +61,10 @@ export async function OneSubmission({
           )}
 
           {submission.logs && (
-            <Link href={`/submission/${submission.id}/logs`} className="underline">
+            <Link
+              href={`/submission/${submission.id}/logs`}
+              className="underline"
+            >
               Download logs
             </Link>
           )}
