@@ -4,9 +4,9 @@ import { db } from "@/app/db";
 import { usersTable } from "@/app/db/schema";
 import { eq } from "drizzle-orm";
 import { UserSubmissions } from "@/app/components/UserSubmissions";
-import Link from "next/link";
+import BackButton from "@/app/components/BackButton";
 
-export default async function PortalPage({
+export default async function UserPage({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -28,15 +28,12 @@ export default async function PortalPage({
   if (!user) notFound();
 
   return (
-    <div className="py-6 px-4 mx-auto space-y-6 max-w-5xl">
-      <div className="px-4 bg-white">
-        <Link className="text-blue-700 underline" href={`/admin`}>
-          Back to Home
-        </Link>
-      </div>
+    <div className="mx-auto space-y-6">
+      <h1 className="text-xl font-bold">User Info</h1>
+      <BackButton />
       {/* Header */}
-      <div className="p-4 bg-white border">
-        <div className="font-mono text-lg">{user.email}</div>
+      <div className="p-4 border">
+        <div className="font-mono text-base">{user.email}</div>
 
         <div className="mt-2">
           <span className="font-semibold">Course status:</span>{" "}

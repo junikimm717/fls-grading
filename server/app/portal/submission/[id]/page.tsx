@@ -1,3 +1,4 @@
+import BackButton from "@/app/components/BackButton";
 import { OneSubmission } from "@/app/components/submission/OneSubmission";
 import { db } from "@/app/db";
 import { submissionTable, usersTable } from "@/app/db/schema";
@@ -43,5 +44,10 @@ export default async function PortalSubmissionPage({
     notFound();
   }
 
-  return <OneSubmission submission={submission} />;
+  return (
+    <div className="space-y-6">
+      <BackButton />
+      <OneSubmission submission={submission} />
+    </div>
+  );
 }
