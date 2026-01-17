@@ -5,6 +5,7 @@ import { usersTable } from "@/app/db/schema";
 import { eq } from "drizzle-orm";
 import { UserSubmissions } from "@/app/components/UserSubmissions";
 import { AvailableWorkers } from "../components/AvailableWorkers";
+import Link from "next/link";
 
 export default async function PortalPage() {
   const session = await auth();
@@ -23,11 +24,11 @@ export default async function PortalPage() {
   if (!user) notFound();
 
   return (
-    <div className="py-6 px-4 mx-auto space-y-6 max-w-5xl">
+    <div className="mx-auto space-y-6">
       {/* Header */}
       <div className="p-4 bg-white border">
         <div className="text-sm text-gray-600">Logged in as</div>
-        <div className="font-mono text-lg">{user.email}</div>
+        <div className="font-mono text-base">{user.email}</div>
 
         <div className="mt-2">
           <span className="font-semibold">Course status:</span>{" "}
@@ -36,6 +37,14 @@ export default async function PortalPage() {
           ) : (
             <span className="font-semibold text-red-600">NOT PASSED</span>
           )}
+        </div>
+        <div className="mt-4">
+          <Link
+            href="/portal/submit"
+            className="py-2 px-3 text-white bg-blue-600"
+          >
+            Submit Assignment
+          </Link>
         </div>
       </div>
 

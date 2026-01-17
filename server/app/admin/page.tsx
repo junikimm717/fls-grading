@@ -47,6 +47,8 @@ export default async function UsersPage({
 
   return (
     <>
+      <h1 className="text-xl font-semibold mb-4">Registered Users</h1>
+
       <UserSearch />
 
       <UsersTable users={users.slice(0, PAGE_SIZE)} />

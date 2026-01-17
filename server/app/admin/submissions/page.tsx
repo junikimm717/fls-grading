@@ -22,11 +22,11 @@ export default async function AdminSubmissionsPage() {
     .orderBy(desc(submissionTable.createdAt))
     .limit(20);
   return (
-    <>
+    <div className="space-y-6">
       <h1 className="text-xl font-semibold mb-4">Recent Submissions</h1>
       <AvailableWorkers />
       <div className="m-3" />
       <SubmissionListClient isAdmin={isAdmin} submissions={submissions} />
-    </>
+    </div>
   );
 }

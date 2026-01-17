@@ -12,6 +12,7 @@ export default function UserSearch() {
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    console.log("submit called")
 
     const form = e.currentTarget;
     const email = (form.elements.namedItem("email") as HTMLInputElement).value;
@@ -42,7 +43,7 @@ export default function UserSearch() {
           name="email"
           defaultValue={searchParams.get("email") ?? ""}
           placeholder="user@mit.edu"
-          className="py-1 px-2 w-64 border"
+          className="h-9 py-1 px-2 w-64 border text-base"
         />
       </div>
 
@@ -51,7 +52,7 @@ export default function UserSearch() {
         <select
           name="admin"
           defaultValue={searchParams.get("admin") ?? "all"}
-          className="py-1 px-2 border"
+          className="h-9 py-1 px-2 border text-base"
         >
           <option value="all">All users</option>
           <option value="admin">Admins only</option>

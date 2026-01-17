@@ -47,16 +47,13 @@ export function ApiKeysList({ keys }: { keys: ApiKeyRow[] }) {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-xl font-semibold">Worker API Keys</h1>
-
-        <button
-          onClick={() => setIsCreateModalOpen(true)}
-          className="py-2 px-4 text-white bg-black transition-colors hover:bg-gray-800"
-        >
-          Create API Key
-        </button>
-      </div>
+      <h1 className="text-xl font-semibold">Worker API Keys</h1>
+      <button
+        onClick={() => setIsCreateModalOpen(true)}
+        className="py-2 px-4 text-white bg-black transition-colors hover:bg-gray-800"
+      >
+        Create API Key
+      </button>
 
       <div className="border">
         <table className="w-full">

@@ -183,7 +183,7 @@ export default async function NewSubmissionPage() {
       : "x86_64";
 
   return (
-    <div className="py-6 px-4 mx-auto space-y-6 max-w-5xl">
+    <div className="space-y-6">
       <div className="p-4 bg-white border">
         <div className="text-sm text-gray-600">Submitting as</div>
         <div className="font-mono">{user.email}</div>
@@ -199,7 +199,9 @@ export default async function NewSubmissionPage() {
             name="tarball"
             accept=".gz,application/gzip"
             required
-            className="block w-full text-sm"
+            className="block w-full text-sm text-gray-700 focus:outline-none
+            file:mr-4 file:py-1 file:px-2 file:border-none
+            file:bg-gray-100 file:text-gray-700"
           />
         </div>
 
