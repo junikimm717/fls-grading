@@ -19,6 +19,13 @@ export default function AdminSidebar({
       </Link>
 
       <Link
+        href="/admin/submissions"
+        className="hover:underline"
+      >
+        Submissions
+      </Link>
+
+      <Link
         href="/admin/add"
         className="hover:underline"
       >
