@@ -1,4 +1,4 @@
-FROM debian:trixie
+FROM debian:bookworm
 RUN apt-get update
 
 # Core init + shell environment
@@ -111,7 +111,10 @@ COPY busybox.patch /patches/busybox.patch
 RUN mkdir -p /src/busybox && \
   curl -L https://github.com/mirror/busybox/archive/refs/tags/1_36_1.tar.gz \
   | tar -xz --strip-components=1 -C /src/busybox && \
-  patch -d /src/busybox -p1 < /patches/busybox.patch
+  patch -d /src/busybox -p1 < /patches/busybox.patch && \
+  sed -i\
+    -e "s|main|int main|g"\
+    "/src/busybox/scripts/kconfig/lxdialog/check-lxdialog.sh"
 
 WORKDIR /workspace
 COPY ./devshell.sh /devshell.sh
