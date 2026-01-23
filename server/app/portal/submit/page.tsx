@@ -26,6 +26,8 @@ const MAX_PASSED = 1;
 const MAX_BYTES = 5 * 1024 * 1024; // 5MB
 const ALLOWED_ARCH = new Set(["x86_64", "aarch64"] as const);
 
+const DEADLINE_EST = new Date("2026-01-31T04:59:00Z");
+
 type Arch = "x86_64" | "aarch64";
 
 /* =========================
@@ -74,6 +76,13 @@ async function createSubmission(formData: FormData) {
 
   const session = await auth();
   if (!session?.user?.id) notFound();
+
+  const now = new Date();
+  if (now > DEADLINE_EST) {
+    throw new SubmissionError(
+      "The submission deadline (Jan 30, 11:59 PM EST) has passed."
+    );
+  }
 
   const userId = session.user.id;
 
