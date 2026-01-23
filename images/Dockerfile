@@ -18,6 +18,7 @@ RUN apt-get install -y --no-install-recommends \
     autoconf \
     automake \
     cmake \
+    python3 \
 # Binary inspection and low-level debugging
 # - binutils: readelf, nm, objdump (ELF inspection)
 # - strace: userspace syscall tracing (early userspace debugging)
