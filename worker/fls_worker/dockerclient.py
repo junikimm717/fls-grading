@@ -164,7 +164,6 @@ class DockerClient:
             image=FLS_GRADING_BUILDER,
             entrypoint=["/usr/bin/tini", "--"],
             command=["sleep", "infinity"],
-            tty=True,
             network_mode="none",
             read_only=True,
             detach=True,
@@ -205,7 +204,6 @@ class DockerClient:
                 ],
                 stdout=True,
                 stderr=True,
-                tty=True,
             )["Id"]
 
             output = self.client.api.exec_start(
@@ -289,7 +287,6 @@ class DockerClient:
             ],
             remove=True,
             detach=True,
-            tty=True,
             network_mode="none",
             volumes={
                 str(dist_host): {
