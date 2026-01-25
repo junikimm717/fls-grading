@@ -5,9 +5,7 @@ import { and, eq, like } from "drizzle-orm";
 import UserSearch from "./UserSearch";
 import UserPagination from "./UserPagination";
 import UsersTable from "./UsersTable";
-import DownloadRosterButton, {
-  exportRoster,
-} from "../components/DownloadRosterButton";
+import DownloadRosterButton from "../components/DownloadRosterButton";
 
 const PAGE_SIZE = 25;
 
