@@ -61,7 +61,7 @@ def main(frag_path, grades_path):
             "MIT ID": mitid,
             "Subject #": "6.S913",
             "Section #": "",
-            "Grade": grade,   # <-- integrated here
+            "Grade": grade,
             "Units": units,
             "Comment": "",
         })
@@ -80,7 +80,6 @@ def main(frag_path, grades_path):
             "Comment",
         ],
     )
-    writer.writeheader()
     writer.writerows(students)
 
 if __name__ == "__main__":
