@@ -5,12 +5,9 @@ from typing import Iterable
 
 import docker
 
-from .config import (
-    FLS_GRADING_BUILDER,
-    FLS_GRADING_GRADER,
-    FLS_HOST_ROOT,
-    FLS_MOUNT_PREFIX,
-)
+from .config import (FLS_GRADING_BUILDER, FLS_GRADING_GRADER, FLS_HOST_ROOT,
+                     FLS_MOUNT_PREFIX)
+from .errors import FLSContainerFailure
 
 MAX_LOG_BYTES = 20 * 1024 * 1024  # 20MB
 TRUNCATION_NOTICE = (
@@ -109,7 +106,7 @@ class DockerClient:
 
                 total += len(chunk)
                 if total > max_bytes:
-                    raise RuntimeError(f"artifact exceeded size limit ({total} bytes)")
+                    raise FLSContainerFailure(f"artifact exceeded size limit ({total} bytes)")
 
                 f.write(chunk)
 
@@ -217,7 +214,7 @@ class DockerClient:
             exit_code = inspect["ExitCode"]
 
             if exit_code != 0:
-                raise RuntimeError(f"builder failed with exit code {exit_code}")
+                raise FLSContainerFailure(f"builder failed with exit code {exit_code}")
 
             # Bootable image streaming
             exec_id = self.client.api.exec_create(
@@ -233,18 +230,17 @@ class DockerClient:
             self._write_stream_to_file(
                 stream,
                 dest=bootable,
-                max_bytes=220 * 1024 * 1024,  # e.g. 220MB cap
+                max_bytes=220 * 1024 * 1024,  # 220MB cap
             )
             inspect = self.client.api.exec_inspect(exec_id)
             exit_code = inspect["ExitCode"]
             if exit_code != 0:
-                raise RuntimeError(
+                raise FLSContainerFailure(
                     f"artifact stream failed with exit code {inspect['ExitCode']}"
                 )
-            # ------------------
 
             if not bootable.exists():
-                raise RuntimeError("bootable.img not found after extraction")
+                raise FLSContainerFailure("bootable.img not found after extraction")
 
             return bootable
 
@@ -307,7 +303,7 @@ class DockerClient:
             status = int(result["StatusCode"])
 
             if status != 0:
-                raise RuntimeError(f"grader failed with exit code {status}")
+                raise FLSContainerFailure(f"grader failed with exit code {status}")
 
         finally:
             try:

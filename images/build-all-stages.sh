@@ -10,14 +10,16 @@ run_stage() {
   local label="$1"
   local limit="$2"
   local script="$3"
-
   local rootfs="$DIST/$label"
 
-  if ! timeout "$limit" env ROOTFS="$rootfs" "$script"; then
-    status=$?
-    if [ "$status" -eq 124 ]; then
-      echo "[fls] ERROR: $label stage timed out after $limit" >&2
-    fi
+  timeout --preserve-status "$limit" env ROOTFS="$rootfs" "$script"
+  status=$?
+
+  if [ "$status" -eq 124 ]; then
+    echo "[fls] ERROR: $label stage timed out after $limit" >&2
+    exit 124
+  elif [ "$status" -ne 0 ]; then
+    echo "[fls] ERROR: $label stage failed (exit $status)" >&2
     exit "$status"
   fi
 }

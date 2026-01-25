@@ -23,5 +23,5 @@ class FLSBadResponseError(FLSAPIError):
 class FLSAlreadyClaimedError(FLSAPIError):
     pass
 
-class DockerClientError(RuntimeError):
+class FLSContainerFailure(Exception):
     pass
