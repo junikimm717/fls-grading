@@ -152,7 +152,7 @@ class DockerClient:
         output_dir = output_dir.resolve()
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        log.info(f"pulling image {FLS_GRADING_BUILDER}")
+        log.info("pulling image %s", FLS_GRADING_BUILDER)
         self.client.images.pull(FLS_GRADING_BUILDER)
 
         log.info("creating builder container")
@@ -160,7 +160,7 @@ class DockerClient:
         container = self.client.containers.create(
             image=FLS_GRADING_BUILDER,
             entrypoint=["/usr/bin/tini", "--"],
-            command=["sleep", "infinity"],
+            command=["sleep", "2400"],
             network_mode="none",
             read_only=True,
             detach=True,
@@ -269,7 +269,7 @@ class DockerClient:
 
         log.info("starting grader container")
 
-        log.info(f"pulling image {FLS_GRADING_GRADER}")
+        log.info("pulling image %s", FLS_GRADING_GRADER)
         self.client.images.pull(FLS_GRADING_GRADER)
 
         container = self.client.containers.run(

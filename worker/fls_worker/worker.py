@@ -145,7 +145,7 @@ def run_once() -> None:
         log.exception("failed to claim submission")
         return
 
-    log.info(f"claimed submission {submission.id} by user {submission.user_id}")
+    log.info("claimed submission %s by user %s", submission.id, submission.user_id)
 
     # all filesystem work happens under FLS_MOUNT_PREFIX
     base_dir = FLS_MOUNT_PREFIX / "jobs" / str(uuid.uuid4())
@@ -196,9 +196,10 @@ def run_once() -> None:
 
         except INFRA_EXCEPTIONS as e:
             raise
-        except Exception as e:
+        except Exception:
             # student fault: build or runtime failure
             log.exception("grading failed for submission %s", submission.id)
+            raise
 
         # ----------------------------------------------------
         # submit result
@@ -211,7 +212,7 @@ def run_once() -> None:
 
     except INFRA_EXCEPTIONS as e:
         # infra error → cancel immediately
-        log.exception(f"infrastructure error; cancelling submission...{e}")
+        log.exception("infrastructure error; cancelling submission... %s", e)
         try:
             client.cancel_submission(submission)
         except Exception:
