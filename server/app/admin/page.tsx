@@ -5,6 +5,9 @@ import { and, eq, like } from "drizzle-orm";
 import UserSearch from "./UserSearch";
 import UserPagination from "./UserPagination";
 import UsersTable from "./UsersTable";
+import DownloadRosterButton, {
+  exportRoster,
+} from "../components/DownloadRosterButton";
 
 const PAGE_SIZE = 25;
 
@@ -47,16 +50,17 @@ export default async function UsersPage({
 
   return (
     <>
-      <h1 className="text-xl font-semibold mb-4">Registered Users</h1>
+      <h1 className="mb-4 text-xl font-semibold">Registered Users</h1>
 
       <UserSearch />
 
+      <div className="mb-6">
+        <DownloadRosterButton />
+      </div>
+
       <UsersTable users={users.slice(0, PAGE_SIZE)} />
 
-      <UserPagination
-        page={page}
-        hasNext={users.length > PAGE_SIZE}
-      />
+      <UserPagination page={page} hasNext={users.length > PAGE_SIZE} />
     </>
   );
 }
