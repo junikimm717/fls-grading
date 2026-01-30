@@ -11,6 +11,7 @@ run_stage() {
   local limit="$2"
   local script="$3"
   local rootfs="$DIST/$label"
+  mkdir -p "$rootfs"
 
   timeout --preserve-status "$limit" env ROOTFS="$rootfs" "$script"
   status=$?
